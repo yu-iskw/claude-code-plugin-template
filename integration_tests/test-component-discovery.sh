@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Validate component directory structure (skills, agents, hooks)
+# Validate component directory structure (skills, agents, commands, hooks)
 set -euo pipefail
 
 errors=0
@@ -23,8 +23,8 @@ warnings=0
 echo "Testing component discovery..."
 
 # Check that at least one component directory exists
-if [[ ! -d "skills" ]] && [[ ! -d "agents" ]] && [[ ! -d "hooks" ]]; then
-	echo "WARNING: No component directories found (skills/, agents/, hooks/)"
+if [[ ! -d "skills" ]] && [[ ! -d "agents" ]] && [[ ! -d "commands" ]] && [[ ! -d "hooks" ]]; then
+	echo "WARNING: No component directories found (skills/, agents/, commands/, hooks/)"
 	warnings=$((warnings + 1))
 fi
 
@@ -47,6 +47,17 @@ if [[ -d "agents" ]]; then
 		warnings=$((warnings + 1))
 	else
 		echo "Found ${agent_count} agent(s)"
+	fi
+fi
+
+# Verify commands directory structure if it exists
+if [[ -d "commands" ]]; then
+	command_count=$(find commands -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+	if [[ ${command_count} -eq 0 ]]; then
+		echo "WARNING: No command files found in commands/ directory"
+		warnings=$((warnings + 1))
+	else
+		echo "Found ${command_count} command file(s)"
 	fi
 fi
 

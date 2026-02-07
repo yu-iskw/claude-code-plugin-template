@@ -93,10 +93,16 @@ run_test() {
 	fi
 }
 
+run_test_nonfatal() {
+	set +e
+	run_test "$1" "$2"
+	set -e
+}
+
 echo "Starting integration tests..."
 
 # Test 1: Validate manifest
-run_test "Manifest validation" "validate-manifest.sh"
+run_test_nonfatal "Manifest validation" "validate-manifest.sh"
 
 if [[ ${MANIFEST_ONLY} == true ]]; then
 	echo ""
@@ -104,13 +110,13 @@ if [[ ${MANIFEST_ONLY} == true ]]; then
 else
 	# Test 2: Plugin loading (unless skipped)
 	if [[ ${SKIP_LOADING} == false ]]; then
-		run_test "Plugin loading" "test-plugin-loading.sh"
+		run_test_nonfatal "Plugin loading" "test-plugin-loading.sh"
 	else
 		echo "Skipping plugin loading tests (--skip-loading)"
 	fi
 
 	# Test 3: Component discovery
-	run_test "Component discovery" "test-component-discovery.sh"
+	run_test_nonfatal "Component discovery" "test-component-discovery.sh"
 fi
 
 # Summary

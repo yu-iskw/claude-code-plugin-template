@@ -10,6 +10,7 @@ RUN apk add --no-cache bash jq && \
 COPY .claude-plugin/ .claude-plugin/
 COPY skills/ skills/
 COPY agents/ agents/
+COPY commands/ commands/
 COPY hooks/ hooks/
 
 # Copy test scripts
