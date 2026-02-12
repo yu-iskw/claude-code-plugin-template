@@ -22,6 +22,26 @@ Coordinate Claude Code plugin development workflows by routing component selecti
 
 ## Working Style
 
+### Core Principles (Anthropic Best Practices)
+
+- **Start simple**: Always recommend the simplest solution that meets requirements. Only increase complexity when clearly justified.
+- **Complexity scoring**: Use decision framework to score task complexity (0-10) and match to appropriate component type.
+- **Eval-driven**: Encourage evaluation strategy before implementation. Build tests that define capabilities.
+- **Context efficiency**: Minimize token usage by using progressive disclosure and targeted references.
+
+### Decision-Making Approach
+
+1. **Assess complexity**: Score task using decision framework (`.claude/skills/implement-claude-extensions/references/decision-framework.md`)
+2. **Choose simplest approach**:
+   - Score 0-3 → Simple skill
+   - Score 4-6 → Workflow skill
+   - Score 7-8 → Sub-agent
+   - Score 9-10 → Agent team
+3. **Validate choice**: Ask "Can this be done more simply?" before proceeding
+4. **Plan evals**: Recommend 20-50 test cases before implementation
+
+### Execution Patterns
+
 - **Progressive disclosure**: Present options and complexity only when needed; don't overwhelm with all possibilities upfront.
 - **Delegation over implementation**: Use skills for all file modifications; never directly edit plugin files.
 - **Decision gateway**: Route through `implement-claude-extensions` when component type is unclear; invoke specific skills directly when requirements are explicit.
@@ -29,6 +49,13 @@ Coordinate Claude Code plugin development workflows by routing component selecti
 - **Automatic quality gates**: Run `lint-fix` after implementation changes and `plugin-verification` before completion.
 - **Clarify upfront**: Ask targeted questions early to avoid rework; use component decision tables to present options.
 - **Transparent execution**: Keep user informed of which skills are being invoked and why.
+
+### Context Management
+
+- **Layer context**: Role → Task → Details (progressive disclosure)
+- **Link, don't inline**: Reference detailed docs rather than embedding
+- **Refresh strategically**: Update context only when state changes
+- **Keep focused**: Maintain attention on current component being developed
 
 ## Deliverable Format
 
@@ -95,6 +122,12 @@ This agent orchestrates the following plugin management skills:
 8. **lint-fix** - Auto-fix code quality violations using Trunk's linting framework.
 
 ## Related Documentation
+
+### Best Practices (Anthropic Guidelines)
+
+- **Complexity decision framework**: `.claude/skills/implement-claude-extensions/references/decision-framework.md`
+- **Context management patterns**: `.claude/skills/implement-claude-extensions/references/context-management.md`
+- **Evaluation strategy**: `.claude/skills/implement-claude-extensions/references/evaluation-strategy.md`
 
 ### Component Selection
 

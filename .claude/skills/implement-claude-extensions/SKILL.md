@@ -7,6 +7,19 @@ description: Choose and implement the right Claude extension type by comparing h
 
 Use this umbrella skill to choose the correct extension type and route implementation to the appropriate component skill.
 
+**Core Principle**: Start simple. Use the decision framework to score task complexity (0-10) and match to the simplest component type that meets requirements.
+
+## Complexity-Based Selection
+
+| Score | Component Type | When to Use |
+| ----- | -------------- | ----------- |
+| 1-3   | Simple Skill   | Single deterministic task, no branching logic |
+| 4-6   | Workflow Skill | Multi-step with some conditional logic |
+| 7-8   | Sub-Agent      | Model-driven decisions, flexible approach needed |
+| 9-10  | Agent Team     | Multiple specialized domains, complex coordination |
+
+See `references/decision-framework.md` for detailed scoring guide.
+
 ## Comparison
 
 | Extension Type | Best For                           | Primary Artifacts                | Component Skill                      |
@@ -19,13 +32,22 @@ Use this umbrella skill to choose the correct extension type and route implement
 
 ## Workflow
 
-1. Identify outcome and constraints.
-2. Use `references/when-to-use.md` to pick extension type(s).
-3. Hand off implementation to component skill(s).
-4. Apply shared lifecycle checks before verification.
+1. **Assess complexity**: Score task complexity using decision framework (0-10)
+2. **Start simple**: Choose simplest component type that meets requirements
+3. **Validate choice**: Ask "Can this be done more simply?"
+4. **Identify constraints**: Determine specific requirements and boundaries
+5. **Plan evaluations**: Define 20-50 test cases for validation
+6. **Route implementation**: Hand off to appropriate component skill
+7. **Apply lifecycle checks**: Follow design → implement → evaluate → verify
 
 ## Progressive Disclosure
 
+### Best Practices (Anthropic Guidelines)
+- **START HERE - Complexity scoring & decision framework**: `references/decision-framework.md`
+- **Context management patterns**: `references/context-management.md`
+- **Evaluation strategy**: `references/evaluation-strategy.md`
+
+### Component Selection
 - Extension comparison details: `references/extension-types.md`
 - Decision guide: `references/when-to-use.md`
 - Cross-component patterns: `references/cross-component-patterns.md`
