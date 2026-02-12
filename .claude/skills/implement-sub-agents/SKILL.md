@@ -9,13 +9,25 @@ Create or update agent files under `agents/` with explicit role boundaries, mode
 
 ## Workflow
 
-1. Define the sub-agent role and scope boundaries.
-2. Author/update agent markdown with valid frontmatter.
-3. Set tool/model/permission configuration based on least privilege.
-4. Validate frontmatter and basic agent file shape.
-5. Connect with related skills/hooks only when required.
+1. **Assess complexity**: Verify that sub-agent is needed (score 7-8). If simpler approach works, use skill instead.
+2. **Define role**: Clear purpose, responsibilities, and explicit boundaries
+3. **Set decision authority**: What agent can/cannot do autonomously
+4. **Configure tools**: Least privilege access to required tools only
+5. **Author/update**: Agent markdown with valid frontmatter
+6. **Context strategy**: Define how agent manages context (retrieval, summarization, state)
+7. **Plan evaluations**: Identify 20-50 test scenarios covering success and failure modes
+8. **Validate**: Check frontmatter and agent file structure
+9. **Connect selectively**: Link related skills/hooks only when required
 
 ## Progressive Disclosure
+
+### Best Practices (Anthropic Guidelines)
+
+- **Complexity decision framework**: `../implement-claude-extensions/references/decision-framework.md`
+- **Context management patterns**: `../implement-claude-extensions/references/context-management.md`
+- **Evaluation strategy**: `../implement-claude-extensions/references/evaluation-strategy.md`
+
+### Sub-Agent Design
 
 - Agent frontmatter rules: `references/subagent-frontmatter.md`
 - Tool access strategy: `references/subagent-tools.md`
@@ -23,9 +35,14 @@ Create or update agent files under `agents/` with explicit role boundaries, mode
 - Permission boundaries: `references/subagent-permissions.md`
 - Delegation patterns: `references/subagent-delegation.md`
 
+### Validation Tools
+
 - Agent file validator: `scripts/validate-subagent.sh`
 - Frontmatter checker: `scripts/check-subagent-frontmatter.sh`
 
+### Templates (by Complexity)
+
+- **Level 3 - Autonomous Agent** (Score 7-8): `assets/templates/subagent-autonomous.md`
 - Base sub-agent template: `assets/templates/subagent-template.md`
 - Read-only sub-agent example: `assets/templates/subagent-readonly.md`
 - Sub-agent with skills example: `assets/templates/subagent-with-skills.md`
