@@ -1,0 +1,175 @@
+{
+  "teamName": "full-stack-team",
+  "objective": "End-to-end dbt project management with BI and data quality monitoring",
+  "displayMode": "detailed",
+  "members": [
+    {
+      "name": "dbt-developer",
+      "role": "core development",
+      "ownership": ["dbt models", "SQL", "configuration"],
+      "responsibilities": [
+        "Develop and maintain dbt models",
+        "Implement business logic",
+        "Manage dbt project structure",
+        "Coordinate model dependencies"
+      ]
+    },
+    {
+      "name": "dbt-tester",
+      "role": "quality assurance",
+      "ownership": ["dbt tests", "data validation"],
+      "responsibilities": [
+        "Implement comprehensive test coverage",
+        "Create validation logic",
+        "Monitor test results",
+        "Maintain test documentation"
+      ]
+    },
+    {
+      "name": "lightdash-metrics",
+      "role": "metrics layer",
+      "ownership": ["Lightdash metrics", "semantic layer"],
+      "responsibilities": [
+        "Define business metrics",
+        "Configure metric properties",
+        "Maintain metrics catalog",
+        "Ensure metric accuracy"
+      ]
+    },
+    {
+      "name": "lightdash-dashboard",
+      "role": "visualization",
+      "ownership": ["dashboards", "BI layer"],
+      "responsibilities": [
+        "Design and build dashboards",
+        "Create effective visualizations",
+        "Organize BI content",
+        "Support end users"
+      ]
+    },
+    {
+      "name": "elementary-monitor",
+      "role": "observability",
+      "ownership": ["data quality monitoring", "alerts"],
+      "responsibilities": [
+        "Set up Elementary monitoring",
+        "Configure anomaly detection",
+        "Manage alert channels",
+        "Track data quality trends"
+      ]
+    },
+    {
+      "name": "elementary-tester",
+      "role": "quality analysis",
+      "ownership": ["Elementary reports", "anomaly investigation"],
+      "responsibilities": [
+        "Analyze data quality reports",
+        "Investigate anomalies",
+        "Tune monitoring sensitivity",
+        "Document quality patterns"
+      ]
+    },
+    {
+      "name": "dbt-debugger",
+      "role": "troubleshooting",
+      "ownership": ["error resolution", "performance optimization"],
+      "responsibilities": [
+        "Debug dbt errors",
+        "Resolve test failures",
+        "Optimize query performance",
+        "Fix data quality issues"
+      ]
+    }
+  ],
+  "workflow": {
+    "phases": [
+      {
+        "name": "Development",
+        "lead": "dbt-developer",
+        "description": "Build and configure dbt models"
+      },
+      {
+        "name": "Testing",
+        "lead": "dbt-tester",
+        "description": "Add comprehensive dbt tests"
+      },
+      {
+        "name": "Monitoring Setup",
+        "lead": "elementary-monitor",
+        "description": "Configure Elementary observability"
+      },
+      {
+        "name": "Metrics Definition",
+        "lead": "lightdash-metrics",
+        "description": "Define Lightdash metrics and dimensions"
+      },
+      {
+        "name": "Dashboard Creation",
+        "lead": "lightdash-dashboard",
+        "description": "Build BI dashboards"
+      },
+      {
+        "name": "Quality Analysis",
+        "lead": "elementary-tester",
+        "description": "Review data quality and monitoring"
+      },
+      {
+        "name": "Issue Resolution",
+        "lead": "dbt-debugger",
+        "description": "Debug and fix any issues (on-demand)"
+      }
+    ]
+  },
+  "collaboration": {
+    "handoffs": [
+      {
+        "from": "dbt-developer",
+        "to": "dbt-tester",
+        "trigger": "Model created",
+        "artifacts": ["SQL model", "schema.yml"]
+      },
+      {
+        "from": "dbt-tester",
+        "to": "elementary-monitor",
+        "trigger": "Tests added",
+        "artifacts": ["Test definitions"]
+      },
+      {
+        "from": "dbt-developer",
+        "to": "lightdash-metrics",
+        "trigger": "Model deployed",
+        "artifacts": ["Deployed model"]
+      },
+      {
+        "from": "lightdash-metrics",
+        "to": "lightdash-dashboard",
+        "trigger": "Metrics deployed",
+        "artifacts": ["Metrics catalog"]
+      },
+      {
+        "from": "elementary-monitor",
+        "to": "elementary-tester",
+        "trigger": "Monitoring configured",
+        "artifacts": ["Elementary tests", "Alert configuration"]
+      },
+      {
+        "from": "any",
+        "to": "dbt-debugger",
+        "trigger": "Error or failure",
+        "artifacts": ["Error logs", "Test results"]
+      }
+    ],
+    "communication": "Parallel and sequential workflows with dbt-debugger on-call"
+  },
+  "useCases": [
+    "Complete dbt project setup from scratch",
+    "Full-stack feature development with BI and monitoring",
+    "Comprehensive project refactoring or migration",
+    "End-to-end analytics pipeline development"
+  ],
+  "operatorGuidance": {
+    "whenToUse": "Use for complex, multi-faceted dbt projects requiring full integration of development, testing, BI, and monitoring",
+    "teamSize": "Large team (7 agents) - use for comprehensive projects",
+    "coordination": "Team operator coordinates handoffs and ensures all agents complete their responsibilities"
+  }
+}

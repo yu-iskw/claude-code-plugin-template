@@ -1,10 +1,19 @@
 {
-  "name": "claude-code-plugin-template",
-  "version": "0.1.0",
-  "description": "Starter scaffold for a Claude Code plugin repository.",
+  "name": "dbt-lightdash-elementary-plugin",
+  "version": "1.0.0",
+  "description": "Comprehensive Claude Code plugin for dbt development with Lightdash BI and Elementary data observability integration.",
   "author": {
     "name": "yu-iskw"
   },
   "license": "Apache-2.0",
-  "repository": "https://github.com/yu-iskw/claude-code-plugin-template"
+  "repository": "https://github.com/yu-iskw/claude-code-plugin-template",
+  "keywords": [
+    "dbt",
+    "lightdash",
+    "elementary",
+    "data-engineering",
+    "analytics",
+    "bi",
+    "data-observability"
+  ]
 }

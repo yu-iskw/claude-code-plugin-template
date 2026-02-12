@@ -1,4 +1,110 @@
 {
   "version": "1",
-  "hooks": []
+  "hooks": [
+    {
+      "name": "dbt-compile-check",
+      "description": "Automatically compile dbt project before committing to catch syntax errors",
+      "event": "user-prompt-submit",
+      "matcher": {
+        "tools": ["Write", "Edit"],
+        "paths": ["models/**/*.sql", "macros/**/*.sql"]
+      },
+      "command": "dbt compile --quiet 2>&1 | head -20 || echo '\n⚠️  dbt compilation failed. Please fix errors before proceeding.'",
+      "options": {
+        "blocking": false,
+        "showOutput": true
+      }
+    },
+    {
+      "name": "suggest-elementary-tests",
+      "description": "Suggest Elementary tests when new models are created",
+      "event": "user-prompt-submit",
+      "matcher": {
+        "tools": ["Write"],
+        "paths": ["models/marts/**/*.sql", "models/intermediate/**/*.sql"]
+      },
+      "command": "echo '\n💡 Tip: Consider adding Elementary monitoring to this model:\n  - elementary.volume_anomalies\n  - elementary.freshness_anomalies\n  - elementary.schema_changes\n\nUse /elementary-setup to configure monitoring.'",
+      "options": {
+        "blocking": false,
+        "showOutput": true
+      }
+    },
+    {
+      "name": "suggest-dbt-tests",
+      "description": "Remind to add dbt tests when schema.yml is modified",
+      "event": "user-prompt-submit",
+      "matcher": {
+        "tools": ["Write", "Edit"],
+        "paths": ["models/**/schema.yml"]
+      },
+      "command": "echo '\n✓ schema.yml updated. Remember to add tests:\n  - unique & not_null for keys\n  - relationships for foreign keys\n  - accepted_values for enums\n\nUse /dbt-test to add comprehensive test coverage.'",
+      "options": {
+        "blocking": false,
+        "showOutput": true
+      }
+    },
+    {
+      "name": "lightdash-validation",
+      "description": "Validate Lightdash metric definitions when YAML changes",
+      "event": "user-prompt-submit",
+      "matcher": {
+        "tools": ["Write", "Edit"],
+        "paths": ["models/**/schema.yml"],
+        "contentPattern": "meta:"
+      },
+      "command": "if grep -q 'metrics:' models/**/schema.yml 2>/dev/null; then echo '\n📊 Lightdash metrics detected. Remember to:\n  1. Test metrics locally: dbt compile\n  2. Preview deployment: lightdash deploy --preview\n  3. Deploy: lightdash deploy\n\nUse /lightdash-deploy for guided deployment.'; fi",
+      "options": {
+        "blocking": false,
+        "showOutput": true
+      }
+    },
+    {
+      "name": "dbt-project-structure",
+      "description": "Enforce dbt project structure conventions",
+      "event": "user-prompt-submit",
+      "matcher": {
+        "tools": ["Write"],
+        "paths": ["models/**/*.sql"]
+      },
+      "command": "filepath=\"$MODIFIED_FILE\"; if [[ $filepath == models/staging/* ]] && [[ $(basename $filepath) != stg_* ]]; then echo '\n⚠️  Staging models should start with stg_ prefix'; fi; if [[ $filepath == models/intermediate/* ]] && [[ $(basename $filepath) != int_* ]]; then echo '\n⚠️  Intermediate models should start with int_ prefix'; fi; if [[ $filepath == models/marts/* ]] && [[ $(basename $filepath) != fct_* ]] && [[ $(basename $filepath) != dim_* ]]; then echo '\n💡 Mart models should start with fct_ (fact) or dim_ (dimension) prefix'; fi",
+      "options": {
+        "blocking": false,
+        "showOutput": true
+      }
+    },
+    {
+      "name": "check-dbt-installed",
+      "description": "Check if dbt is installed on session start",
+      "event": "session-start",
+      "command": "if ! command -v dbt &> /dev/null; then echo '\n⚠️  dbt is not installed. Install it with:\n  pip install dbt-core dbt-<adapter>\n\nFor example:\n  pip install dbt-core dbt-snowflake'; else echo '✓ dbt version:' && dbt --version | head -1; fi",
+      "options": {
+        "blocking": false,
+        "showOutput": true
+      }
+    },
+    {
+      "name": "check-elementary-cli",
+      "description": "Check if Elementary CLI is installed on session start",
+      "event": "session-start",
+      "command": "if ! command -v edr &> /dev/null; then echo '\n💡 Elementary CLI not found. Install it with:\n  pip install elementary-data'; else echo '✓ Elementary CLI installed' && edr --version 2>&1 | head -1; fi",
+      "options": {
+        "blocking": false,
+        "showOutput": true
+      }
+    },
+    {
+      "name": "pre-commit-validation",
+      "description": "Run dbt compile and lint checks before git commit",
+      "event": "agent-tool-call",
+      "matcher": {
+        "tools": ["Bash"],
+        "commandPattern": "git commit"
+      },
+      "command": "echo '\n🔍 Running pre-commit checks...' && dbt compile --quiet && echo '✓ dbt compilation passed' || (echo '✗ dbt compilation failed' && exit 1)",
+      "options": {
+        "blocking": true,
+        "showOutput": true
+      }
+    }
+  ]
 }

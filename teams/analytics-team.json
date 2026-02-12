@@ -1,0 +1,81 @@
+{
+  "teamName": "analytics-team",
+  "objective": "Develop dbt models with Lightdash metrics for business intelligence and reporting",
+  "displayMode": "concise",
+  "members": [
+    {
+      "name": "dbt-developer",
+      "role": "model development",
+      "ownership": ["dbt models", "SQL transformations", "model configuration"],
+      "responsibilities": [
+        "Build data models for analytics use cases",
+        "Ensure models support required metrics",
+        "Optimize for query performance",
+        "Create appropriate aggregations"
+      ]
+    },
+    {
+      "name": "lightdash-metrics",
+      "role": "metrics definition",
+      "ownership": ["Lightdash YAML", "metrics", "dimensions", "measures"],
+      "responsibilities": [
+        "Define business metrics and KPIs",
+        "Configure dimensions and measures",
+        "Set up metric formatting",
+        "Document metric definitions"
+      ]
+    },
+    {
+      "name": "lightdash-dashboard",
+      "role": "visualization",
+      "ownership": ["dashboards", "charts", "explores"],
+      "responsibilities": [
+        "Design effective dashboards",
+        "Create charts and visualizations",
+        "Set up dashboard filters",
+        "Organize content in Lightdash"
+      ]
+    }
+  ],
+  "workflow": {
+    "phases": [
+      {
+        "name": "Data Modeling",
+        "lead": "dbt-developer",
+        "description": "Build dbt models that support business metrics"
+      },
+      {
+        "name": "Metrics Definition",
+        "lead": "lightdash-metrics",
+        "description": "Define Lightdash metrics, dimensions, and measures"
+      },
+      {
+        "name": "Dashboard Creation",
+        "lead": "lightdash-dashboard",
+        "description": "Build dashboards and visualizations using defined metrics"
+      }
+    ]
+  },
+  "collaboration": {
+    "handoffs": [
+      {
+        "from": "dbt-developer",
+        "to": "lightdash-metrics",
+        "trigger": "Model ready for metrics",
+        "artifacts": ["Deployed dbt model", "schema.yml structure"]
+      },
+      {
+        "from": "lightdash-metrics",
+        "to": "lightdash-dashboard",
+        "trigger": "Metrics defined and deployed",
+        "artifacts": ["Lightdash metrics catalog", "Available dimensions"]
+      }
+    ],
+    "communication": "Iterative collaboration between modeling and metrics"
+  },
+  "useCases": [
+    "Create new business metrics and dashboards",
+    "Build analytics for new data sources",
+    "Develop KPI reporting dashboards"
+  ]
+}

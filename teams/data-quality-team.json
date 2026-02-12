@@ -1,0 +1,81 @@
+{
+  "teamName": "data-quality-team",
+  "objective": "Build production-ready dbt models with comprehensive data quality testing and monitoring",
+  "displayMode": "concise",
+  "members": [
+    {
+      "name": "dbt-developer",
+      "role": "model development",
+      "ownership": ["SQL models", "schema.yml", "model configuration"],
+      "responsibilities": [
+        "Create dbt models following best practices",
+        "Organize models in appropriate layers",
+        "Configure materializations",
+        "Document models and columns"
+      ]
+    },
+    {
+      "name": "dbt-tester",
+      "role": "data quality validation",
+      "ownership": ["generic tests", "singular tests", "test configuration"],
+      "responsibilities": [
+        "Add comprehensive dbt tests",
+        "Configure test severity and thresholds",
+        "Create custom validation logic",
+        "Review test coverage"
+      ]
+    },
+    {
+      "name": "elementary-monitor",
+      "role": "observability setup",
+      "ownership": ["Elementary tests", "anomaly detection", "alerts"],
+      "responsibilities": [
+        "Configure Elementary monitoring",
+        "Add anomaly detection tests",
+        "Set up alert channels",
+        "Monitor schema changes"
+      ]
+    }
+  ],
+  "workflow": {
+    "phases": [
+      {
+        "name": "Model Development",
+        "lead": "dbt-developer",
+        "description": "Create or modify dbt models with proper SQL and configuration"
+      },
+      {
+        "name": "Quality Validation",
+        "lead": "dbt-tester",
+        "description": "Add dbt tests for data quality validation"
+      },
+      {
+        "name": "Observability Setup",
+        "lead": "elementary-monitor",
+        "description": "Configure Elementary monitoring and anomaly detection"
+      }
+    ]
+  },
+  "collaboration": {
+    "handoffs": [
+      {
+        "from": "dbt-developer",
+        "to": "dbt-tester",
+        "trigger": "Model created or modified",
+        "artifacts": ["Model SQL", "schema.yml with columns"]
+      },
+      {
+        "from": "dbt-tester",
+        "to": "elementary-monitor",
+        "trigger": "Tests added",
+        "artifacts": ["schema.yml with tests", "singular test files"]
+      }
+    ],
+    "communication": "Sequential workflow with quality gates at each phase"
+  },
+  "useCases": [
+    "Build new dbt models with complete testing",
+    "Add data quality coverage to existing models",
+    "Refactor models with improved testing strategy"
+  ]
+}

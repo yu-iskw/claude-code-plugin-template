@@ -1,78 +1,286 @@
-# Claude Plugin Template
+# dbt + Lightdash + Elementary Plugin for Claude Code
 
-Template repository for bootstrapping a Claude Code plugin with:
+Comprehensive Claude Code plugin for professional dbt development with integrated Lightdash BI and Elementary data observability.
 
-- plugin manifest (`.claude-plugin/plugin.json`)
-- skills (`skills/**/SKILL.md`)
-- agents (`agents/*.md`)
-- hooks (`hooks/hooks.json`)
-- quality checks (`trunk` + GitHub Actions)
-- integration smoke tests (`integration_tests/`)
+## Overview
 
-## Quickstart
+This plugin provides a complete toolkit for modern analytics engineering:
 
-1. Create a new repository from this template.
-2. Update `.claude-plugin/plugin.json` (`name`, `version`, `description`, `author`, `repository`).
-3. Replace sample components with your own:
-   - `skills/hello-world/SKILL.md`
-   - `agents/say-hello-agent.md`
-   - `hooks/hooks.json`
-4. Run local checks:
-   - `make lint`
-   - `make test-integration-docker`
+- **dbt Development**: Expert agents for building, testing, and documenting dbt models
+- **Lightdash Integration**: Metric definition and dashboard creation for BI
+- **Elementary Observability**: Automated data quality monitoring and anomaly detection
+- **Coordinated Teams**: Multi-agent workflows for complex analytics projects
+- **Automation Hooks**: Smart suggestions and validation during development
+- **Best Practices**: Built-in rules and guidelines for dbt, Lightdash, and Elementary
 
-## Repository Layout
+## Components
+
+### Sub-Agents (7)
+
+Specialized autonomous agents for different aspects of analytics engineering:
+
+**dbt Core Agents**
+- `dbt-developer`: Build and refactor dbt models following best practices
+- `dbt-debugger`: Troubleshoot errors, performance issues, and test failures
+- `dbt-tester`: Add comprehensive data quality tests
+
+**Lightdash Agents**
+- `lightdash-metrics`: Define metrics, dimensions, and measures in YAML
+- `lightdash-dashboard`: Design and build BI dashboards
+
+**Elementary Agents**
+- `elementary-monitor`: Configure data quality monitoring and anomaly detection
+- `elementary-tester`: Analyze data quality reports and investigate issues
+
+### Skills (7)
+
+User-invocable capabilities for common operations:
+
+- `/dbt-init`: Initialize or configure dbt project
+- `/dbt-model`: Create or modify dbt models
+- `/dbt-test`: Add comprehensive test coverage
+- `/dbt-docs`: Generate and serve dbt documentation
+- `/lightdash-deploy`: Deploy Lightdash metrics and configurations
+- `/elementary-setup`: Set up Elementary data observability
+- `/elementary-report`: Generate and analyze data quality reports
+
+### Agent Teams (3)
+
+Coordinated multi-agent workflows:
+
+- `data-quality-team`: Build models with comprehensive testing (dbt-developer + dbt-tester + elementary-monitor)
+- `analytics-team`: Develop metric-driven analytics (dbt-developer + lightdash-metrics + lightdash-dashboard)
+- `full-stack-team`: End-to-end project management with all agents
+
+### Hooks (8)
+
+Automated assistance and validation:
+
+- `dbt-compile-check`: Auto-compile on model changes
+- `suggest-elementary-tests`: Recommend monitoring for new models
+- `suggest-dbt-tests`: Remind about test coverage
+- `lightdash-validation`: Validate metric definitions
+- `dbt-project-structure`: Enforce naming conventions
+- `check-dbt-installed`: Verify dbt installation
+- `check-elementary-cli`: Verify Elementary CLI
+- `pre-commit-validation`: Block commits with compilation errors
+
+### Rules
+
+Best practice guidelines:
+
+- `dbt-best-practices.md`: SQL style, model structure, testing, performance
+- `lightdash-conventions.md`: Metric naming, formatting, organization
+- `elementary-guidelines.md`: Monitoring coverage, sensitivity tuning, alerting
+
+## Quick Start
+
+### Installation
+
+1. Install the plugin in your Claude Code environment
+2. Open a dbt project directory
+3. Start using skills and agents
+
+### Basic Workflow
+
+```
+# Initialize a new dbt project
+/dbt-init
+
+# Create a new model
+/dbt-model create staging model for users table
+
+# Add tests and monitoring
+/dbt-test add comprehensive coverage to stg_users
+/elementary-setup add monitoring to critical models
+
+# Define Lightdash metrics
+Use lightdash-metrics agent to add metrics to schema.yml
+
+# Generate documentation
+/dbt-docs generate and serve
+
+# Deploy to Lightdash
+/lightdash-deploy sync metrics to production
+```
+
+### Using Agent Teams
+
+For complex projects, invoke teams for coordinated workflows:
+
+```
+Task: Build a new customer analytics mart with BI and monitoring
+
+Use data-quality-team to:
+1. Build fct_customer_orders model
+2. Add comprehensive dbt tests
+3. Configure Elementary anomaly detection
+
+Then use analytics-team to:
+1. Define customer metrics (CLV, retention, etc.)
+2. Create executive dashboard
+```
+
+## Repository Structure
 
 ```text
 .claude-plugin/
-  plugin.json                    # Claude plugin metadata
-agents/
-  say-hello-agent.md             # Example agent
-commands/
-  .gitkeep                       # Optional command definitions
+  plugin.json                           # Plugin metadata
+
+agents/                                 # Sub-agents
+  dbt-developer.md                      # dbt model development
+  dbt-debugger.md                       # Error troubleshooting
+  dbt-tester.md                         # Test implementation
+  lightdash-metrics.md                  # Metric definitions
+  lightdash-dashboard.md                # Dashboard creation
+  elementary-monitor.md                 # Observability setup
+  elementary-tester.md                  # Quality analysis
+
+skills/                                 # User-invocable skills
+  dbt-init/SKILL.md                     # Project initialization
+  dbt-model/SKILL.md                    # Model creation
+  dbt-test/SKILL.md                     # Test coverage
+  dbt-docs/SKILL.md                     # Documentation
+  lightdash-deploy/SKILL.md             # Lightdash deployment
+  elementary-setup/SKILL.md             # Elementary setup
+  elementary-report/SKILL.md            # Quality reporting
+
+teams/                                  # Agent teams
+  data-quality-team.json                # Development + testing + monitoring
+  analytics-team.json                   # Development + BI
+  full-stack-team.json                  # All agents
+
 hooks/
-  hooks.json                     # Hook config
-integration_tests/
-  Dockerfile                     # Smoke test image
-  run.sh                         # Orchestrates integration scripts
-  validate-manifest.sh
-  test-plugin-loading.sh
-  test-component-discovery.sh
-skills/
-  hello-world/
-    SKILL.md                     # Example skill
-.github/workflows/
-  integration_tests.yml          # Plugin smoke tests
-  trunk_check.yml                # Lint checks
-  trunk_upgrade.yml              # Scheduled Trunk upgrades
+  hooks.json                            # Automation hooks
+
+rules/                                  # Best practices
+  dbt-best-practices.md                 # dbt guidelines
+  lightdash-conventions.md              # Metric standards
+  elementary-guidelines.md              # Monitoring strategy
 ```
 
-## Local Development
+## Features
 
-- `make format`: format files with Trunk
-- `make lint`: run all linters via Trunk
-- `make test-integration-docker`: run integration tests in Docker
+### Intelligent Automation
 
-You can also run integration tests directly:
+- Auto-compile dbt on model changes
+- Suggest tests when schema.yml is updated
+- Recommend Elementary monitoring for new models
+- Validate Lightdash metric syntax
+- Enforce dbt naming conventions
 
-- `./integration_tests/run.sh`
-- `./integration_tests/run.sh --manifest-only`
-- `./integration_tests/run.sh --verbose`
+### Best Practice Enforcement
 
-## CI
+- SQL style guidelines
+- Model organization (staging/intermediate/marts)
+- Test coverage requirements
+- Metric naming standards
+- Monitoring sensitivity tuning
 
-GitHub Actions includes:
+### Comprehensive Workflows
 
-- `.github/workflows/trunk_check.yml`: lint and static checks
-- `.github/workflows/integration_tests.yml`: manifest validation and plugin loading smoke tests
-- `.github/workflows/trunk_upgrade.yml`: weekly Trunk dependency updates
+- Initialize projects with optimal structure
+- Build models with proper materialization
+- Add multi-layered test coverage
+- Define business-friendly metrics
+- Create effective dashboards
+- Monitor data quality continuously
 
-## Release
+## Use Cases
 
-1. Update `.claude-plugin/plugin.json` version.
-2. Tag and publish a release.
-3. Share your repository as the plugin entry point/template.
+### New dbt Project
+```
+/dbt-init → Set up project structure
+/dbt-model → Build initial models
+/dbt-test → Add test coverage
+/elementary-setup → Configure monitoring
+/dbt-docs → Generate documentation
+```
+
+### Add BI Layer
+```
+Use lightdash-metrics agent → Define metrics in YAML
+Use lightdash-dashboard agent → Create dashboards
+/lightdash-deploy → Deploy to Lightdash
+```
+
+### Data Quality Incident
+```
+/elementary-report → Review quality trends
+Use elementary-tester agent → Investigate anomalies
+Use dbt-debugger agent → Fix underlying issues
+Tune Elementary test sensitivity as needed
+```
+
+### Refactoring
+```
+Use dbt-developer agent → Refactor models
+/dbt-test → Update tests
+dbt-debugger helps resolve issues
+/elementary-report → Verify data quality maintained
+```
+
+## Requirements
+
+- **dbt Core**: Version 1.0+
+- **dbt Adapter**: For your data warehouse (Snowflake, BigQuery, etc.)
+- **Lightdash**: Optional, for BI features
+- **Elementary**: Optional, for data observability
+- **Git**: For version control
+- **Python**: 3.8+ for dbt and Elementary CLI
+
+## Development
+
+### Local Testing
+
+```bash
+# Format code
+make format
+
+# Run linters
+make lint
+
+# Run integration tests
+make test-integration-docker
+```
+
+### CI/CD
+
+GitHub Actions automatically:
+- Validates plugin manifest
+- Tests component loading
+- Runs linters
+- Updates dependencies weekly
+
+## Documentation
+
+- **Plugin Components**: See individual agent and skill files
+- **Best Practices**: See `rules/` directory
+- **Examples**: Included in skill documentation
+- **Integration**: See CLAUDE.md for usage in Claude Code
+
+## Contributing
+
+Contributions welcome! Please:
+1. Follow existing patterns for agents/skills/teams
+2. Add comprehensive documentation
+3. Include examples in skill definitions
+4. Update rules as needed
+5. Test with integration tests
 
 ## License
 
 Apache License 2.0. See `LICENSE`.
+
+## Credits
+
+Built with inspiration from:
+- [dbt-labs/dbt-agent-skills](https://github.com/dbt-labs/dbt-agent-skills)
+- [Lightdash](https://www.lightdash.com/)
+- [Elementary Data](https://www.elementary-data.com/)
+
+## Support
+
+- Issues: GitHub Issues
+- Discussions: GitHub Discussions
+- Documentation: See `rules/` directory and individual component files
