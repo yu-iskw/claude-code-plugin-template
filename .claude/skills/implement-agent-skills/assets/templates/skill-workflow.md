@@ -16,19 +16,23 @@
 ## Workflow Steps
 
 ### Phase 1: [Phase Name]
+
 1. [Step 1.1] - [Expected outcome]
 2. [Step 1.2] - [Expected outcome]
 
 ### Phase 2: [Phase Name]
+
 1. [Step 2.1] - [Expected outcome]
 2. [Step 2.2] - [Expected outcome]
 
 **Decision Point:** If [condition], proceed to Phase 3A, else Phase 3B
 
 ### Phase 3A: [Conditional Path A]
+
 1. [Step 3A.1]
 
 ### Phase 3B: [Conditional Path B]
+
 1. [Step 3B.1]
 
 ## Inputs
@@ -49,6 +53,7 @@
 ## Progress Tracking
 
 The skill uses task lists to track progress:
+
 - [ ] Phase 1 complete
 - [ ] Phase 2 complete
 - [ ] Phase 3 complete
@@ -56,7 +61,7 @@ The skill uses task lists to track progress:
 
 ## Example Invocation
 
-```
+```text
 User: [Complex request requiring workflow]
 Agent: [Creates task list]
 Agent: [Executes Phase 1]
@@ -82,6 +87,7 @@ Agent: [Reports completion with summary]
 ## Rollback Strategy
 
 If error occurs in Phase N:
+
 1. Document error state
 2. Roll back changes from Phase N
 3. Report failure with context
@@ -102,4 +108,4 @@ If error occurs in Phase N:
 
 ---
 
-*This is a Level 2 Workflow Skill with predictable multi-step execution.*
+_This is a Level 2 Workflow Skill with predictable multi-step execution._

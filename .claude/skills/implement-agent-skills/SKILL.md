@@ -21,21 +21,25 @@ Create or update `skills/<skill-name>/SKILL.md` files with deterministic scope a
 ## Progressive Disclosure
 
 ### Best Practices (Anthropic Guidelines)
+
 - **Complexity decision framework**: `../implement-claude-extensions/references/decision-framework.md`
 - **Context management patterns**: `../implement-claude-extensions/references/context-management.md`
 - **Evaluation strategy**: `../implement-claude-extensions/references/evaluation-strategy.md`
 
 ### Skill Design Patterns
+
 - Skill directory conventions: `references/skill-structure.md`
 - Required frontmatter fields: `references/skill-frontmatter.md`
 - Progressive disclosure patterns: `references/skill-progressive-disclosure.md`
 - Invocation and trigger guidance: `references/skill-invocation.md`
 
 ### Validation Tools
+
 - Structure validator: `scripts/validate-skill-structure.sh`
 - Frontmatter checker: `scripts/check-skill-frontmatter.sh`
 
 ### Tiered Templates (by Complexity)
+
 - **Level 1 - Simple Skill** (Score 1-3): `assets/templates/skill-simple.md`
 - **Level 2 - Workflow Skill** (Score 4-6): `assets/templates/skill-workflow.md`
 - Base skill template: `assets/templates/skill-template.md`

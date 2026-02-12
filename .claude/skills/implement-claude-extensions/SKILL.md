@@ -11,11 +11,11 @@ Use this umbrella skill to choose the correct extension type and route implement
 
 ## Complexity-Based Selection
 
-| Score | Component Type | When to Use |
-| ----- | -------------- | ----------- |
-| 1-3   | Simple Skill   | Single deterministic task, no branching logic |
-| 4-6   | Workflow Skill | Multi-step with some conditional logic |
-| 7-8   | Sub-Agent      | Model-driven decisions, flexible approach needed |
+| Score | Component Type | When to Use                                        |
+| ----- | -------------- | -------------------------------------------------- |
+| 1-3   | Simple Skill   | Single deterministic task, no branching logic      |
+| 4-6   | Workflow Skill | Multi-step with some conditional logic             |
+| 7-8   | Sub-Agent      | Model-driven decisions, flexible approach needed   |
 | 9-10  | Agent Team     | Multiple specialized domains, complex coordination |
 
 See `references/decision-framework.md` for detailed scoring guide.
@@ -43,11 +43,13 @@ See `references/decision-framework.md` for detailed scoring guide.
 ## Progressive Disclosure
 
 ### Best Practices (Anthropic Guidelines)
+
 - **START HERE - Complexity scoring & decision framework**: `references/decision-framework.md`
 - **Context management patterns**: `references/context-management.md`
 - **Evaluation strategy**: `references/evaluation-strategy.md`
 
 ### Component Selection
+
 - Extension comparison details: `references/extension-types.md`
 - Decision guide: `references/when-to-use.md`
 - Cross-component patterns: `references/cross-component-patterns.md`

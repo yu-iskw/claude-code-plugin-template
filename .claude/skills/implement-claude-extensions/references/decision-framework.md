@@ -9,25 +9,31 @@ Find the simplest solution possible. Only increase complexity when needed. Agent
 ## Decision Tree
 
 ### 1. Can the task be completed with a single prompt?
+
 - **YES** → Use a simple skill with clear instructions
 - **NO** → Continue to step 2
 
 ### 2. Is the workflow well-defined and predictable?
+
 - **YES** → Use a **workflow-based skill** (sequential steps, deterministic)
 - **NO** → Continue to step 3
 
 ### 3. Does it require model-driven decision-making?
+
 - **YES** → Use a **sub-agent** (flexible, adaptive)
 - **NO** → Reconsider if you need agent architecture
 
 ### 4. Does it require multiple specialized agents?
+
 - **YES** → Consider **agent teams** (parallel/sequential coordination)
 - **NO** → Use single sub-agent
 
 ## Complexity Levels
 
 ### Level 1: Simple Skill (Complexity Score: 1-3)
+
 **When to use:**
+
 - Single, well-defined task
 - No branching logic needed
 - Predictable inputs/outputs
@@ -38,7 +44,9 @@ Find the simplest solution possible. Only increase complexity when needed. Agent
 **Template:** `assets/templates/skill-simple.md`
 
 ### Level 2: Workflow Skill (Complexity Score: 4-6)
+
 **When to use:**
+
 - Multiple sequential steps
 - Some conditional logic
 - Predictable workflow structure
@@ -49,7 +57,9 @@ Find the simplest solution possible. Only increase complexity when needed. Agent
 **Template:** `assets/templates/skill-workflow.md`
 
 ### Level 3: Sub-Agent (Complexity Score: 7-8)
+
 **When to use:**
+
 - Model-driven decisions required
 - Flexible approach needed
 - Complex problem-solving
@@ -60,7 +70,9 @@ Find the simplest solution possible. Only increase complexity when needed. Agent
 **Template:** `assets/templates/subagent-autonomous.md`
 
 ### Level 4: Agent Team (Complexity Score: 9-10)
+
 **When to use:**
+
 - Multiple specialized domains
 - Parallel execution beneficial
 - Complex coordination needed
@@ -87,12 +99,12 @@ Score each factor 0-2, sum to get total (0-10):
 
 ## Trade-offs Matrix
 
-| Approach | Latency | Cost | Consistency | Flexibility | Complexity |
-|----------|---------|------|-------------|-------------|------------|
-| Simple Skill | ⚡ Low | 💰 Low | ⭐⭐⭐ High | ⚙️ Low | 🎯 Low |
-| Workflow | ⚡ Medium | 💰 Medium | ⭐⭐ Medium | ⚙️⚙️ Medium | 🎯 Medium |
-| Sub-Agent | ⚡ High | 💰 High | ⭐ Variable | ⚙️⚙️⚙️ High | 🎯 High |
-| Agent Team | ⚡ Highest | 💰 Highest | ⭐ Variable | ⚙️⚙️⚙️ Highest | 🎯 Highest |
+| Approach     | Latency    | Cost       | Consistency | Flexibility    | Complexity |
+| ------------ | ---------- | ---------- | ----------- | -------------- | ---------- |
+| Simple Skill | ⚡ Low     | 💰 Low     | ⭐⭐⭐ High | ⚙️ Low         | 🎯 Low     |
+| Workflow     | ⚡ Medium  | 💰 Medium  | ⭐⭐ Medium | ⚙️⚙️ Medium    | 🎯 Medium  |
+| Sub-Agent    | ⚡ High    | 💰 High    | ⭐ Variable | ⚙️⚙️⚙️ High    | 🎯 High    |
+| Agent Team   | ⚡ Highest | 💰 Highest | ⭐ Variable | ⚙️⚙️⚙️ Highest | 🎯 Highest |
 
 ## Anti-Patterns
 

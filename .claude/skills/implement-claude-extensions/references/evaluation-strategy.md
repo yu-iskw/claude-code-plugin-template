@@ -9,23 +9,26 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 ## Evaluation Levels
 
 ### Level 1: Unit Evals (Individual Skills/Agents)
+
 **Purpose:** Verify single component behavior
 **Scope:** 20-50 test cases per component
 **Focus:** Core functionality, edge cases, error handling
 
 ### Level 2: Integration Evals (Multi-Component)
+
 **Purpose:** Verify component interaction
 **Scope:** 10-30 test cases covering workflows
 **Focus:** Handoffs, state management, coordination
 
 ### Level 3: End-to-End Evals (Full Workflows)
+
 **Purpose:** Verify user-facing scenarios
 **Scope:** 5-15 realistic user tasks
 **Focus:** Task completion, quality, user experience
 
 ## Eval-Driven Development Workflow
 
-```
+```markdown
 1. Define capability (what should the agent do?)
 2. Create eval cases (20-50 real scenarios)
 3. Run evals (expect failures initially)
@@ -39,10 +42,12 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 ## Building Effective Eval Suites
 
 ### Start with Real Failures
+
 **Best source:** 20-50 simple tasks drawn from actual failures
 
 **Example for code-review skill:**
-```
+
+```text
 - Review PR with obvious security flaw → Should flag vulnerability
 - Review PR with style issues only → Should suggest style fixes
 - Review PR with breaking changes → Should identify breaking changes
@@ -50,7 +55,9 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 ```
 
 ### Cover Critical Paths
+
 **Identify must-work scenarios:**
+
 - Happy path (most common use case)
 - Error handling (invalid input, missing files)
 - Edge cases (empty input, very large input)
@@ -59,6 +66,7 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 ### Maintain Eval Quality
 
 **Good eval characteristics:**
+
 - **Specific:** Clear input and expected output
 - **Realistic:** Based on actual usage
 - **Reproducible:** Same input → same evaluation
@@ -68,15 +76,19 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 ## Eval Templates
 
 ### Skill Eval Template
+
 ```markdown
 # Eval: [Skill Name]
 
 ## Test Case 1: [Scenario Name]
+
 **Input:**
+
 - User request: "[exact user message]"
 - Context: [relevant files, state]
 
 **Expected Behavior:**
+
 - [ ] Completes without errors
 - [ ] Produces [specific output]
 - [ ] Takes action [specific action]
@@ -88,11 +100,14 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 ```
 
 ### Sub-Agent Eval Template
+
 ```markdown
 # Eval: [Sub-Agent Name]
 
 ## Scenario 1: [Task Type]
+
 **Setup:**
+
 - Repository state: [initial state]
 - Available tools: [list]
 
@@ -100,11 +115,13 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 "[User request]"
 
 **Expected Outcome:**
+
 - Decision made: [specific decision]
 - Actions taken: [list of actions]
 - Output quality: [quality criteria]
 
 **Success Criteria:**
+
 - [ ] Correct approach chosen
 - [ ] All steps completed
 - [ ] Output meets quality bar
@@ -113,6 +130,7 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 ## Measurement Metrics
 
 ### Quantitative Metrics
+
 - **Success Rate:** % of evals passed
 - **Task Completion:** % of tasks fully completed
 - **Error Rate:** % of runs with errors
@@ -120,6 +138,7 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 - **Cost:** Total tokens used per task
 
 ### Qualitative Metrics
+
 - **Output Quality:** Human judgment of result quality
 - **Approach Appropriateness:** Did agent choose right strategy?
 - **Robustness:** How well does it handle edge cases?
@@ -128,6 +147,7 @@ Build evaluations BEFORE agents can fully satisfy them. Use evals to define capa
 ## Evaluation Tools
 
 ### Option 1: Simple Script-Based Evals
+
 ```bash
 # scripts/eval-skill.sh
 #!/bin/bash
@@ -143,6 +163,7 @@ done
 ```
 
 ### Option 2: Structured Eval Framework
+
 ```json
 {
   "eval_suite": "code-review-skill",
@@ -165,7 +186,9 @@ done
 ```
 
 ### Option 3: LLM-as-Judge
+
 Use Claude to evaluate agent output quality:
+
 ```markdown
 Evaluate this agent output:
 
@@ -237,6 +260,7 @@ jobs:
 ## Evaluation Checklist
 
 Before deploying agent/skill:
+
 - [ ] Created 20-50 eval test cases
 - [ ] Covered happy path, errors, edge cases
 - [ ] Success rate > 90%

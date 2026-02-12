@@ -30,7 +30,7 @@
 
 ## Example Invocation
 
-```
+```text
 User: [Example request]
 Agent: [Expected behavior]
 ```
@@ -53,4 +53,4 @@ Agent: [Expected behavior]
 
 ---
 
-*This is a Level 1 Simple Skill following Anthropic's "start simple" principle.*
+_This is a Level 1 Simple Skill following Anthropic's "start simple" principle._

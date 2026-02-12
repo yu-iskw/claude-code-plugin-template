@@ -23,11 +23,13 @@ Implement team setup and coordination patterns for multi-agent workflows, includ
 ## Progressive Disclosure
 
 ### Best Practices (Anthropic Guidelines)
+
 - **Complexity decision framework**: `../implement-claude-extensions/references/decision-framework.md`
 - **Context management patterns**: `../implement-claude-extensions/references/context-management.md`
 - **Evaluation strategy**: `../implement-claude-extensions/references/evaluation-strategy.md`
 
 ### Team Design
+
 - Team setup structure: `references/team-setup.md`
 - Coordination contracts: `references/team-coordination.md`
 - Display mode selection: `references/team-display-modes.md`
@@ -35,10 +37,12 @@ Implement team setup and coordination patterns for multi-agent workflows, includ
 - Known limitations: `references/team-limitations.md`
 
 ### Validation Tools
+
 - Team config checker: `scripts/check-team-config.sh`
 - Environment verifier: `scripts/verify-team-env.sh`
 
 ### Templates
+
 - Team config example: `assets/templates/team-config-example.json`
 - Team task example: `assets/templates/team-task-example.md`
 

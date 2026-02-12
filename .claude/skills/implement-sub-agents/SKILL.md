@@ -22,11 +22,13 @@ Create or update agent files under `agents/` with explicit role boundaries, mode
 ## Progressive Disclosure
 
 ### Best Practices (Anthropic Guidelines)
+
 - **Complexity decision framework**: `../implement-claude-extensions/references/decision-framework.md`
 - **Context management patterns**: `../implement-claude-extensions/references/context-management.md`
 - **Evaluation strategy**: `../implement-claude-extensions/references/evaluation-strategy.md`
 
 ### Sub-Agent Design
+
 - Agent frontmatter rules: `references/subagent-frontmatter.md`
 - Tool access strategy: `references/subagent-tools.md`
 - Model selection guidance: `references/subagent-models.md`
@@ -34,10 +36,12 @@ Create or update agent files under `agents/` with explicit role boundaries, mode
 - Delegation patterns: `references/subagent-delegation.md`
 
 ### Validation Tools
+
 - Agent file validator: `scripts/validate-subagent.sh`
 - Frontmatter checker: `scripts/check-subagent-frontmatter.sh`
 
 ### Templates (by Complexity)
+
 - **Level 3 - Autonomous Agent** (Score 7-8): `assets/templates/subagent-autonomous.md`
 - Base sub-agent template: `assets/templates/subagent-template.md`
 - Read-only sub-agent example: `assets/templates/subagent-readonly.md`
