@@ -7,20 +7,14 @@ RUN apk add --no-cache bash jq && \
     npm install -g @anthropic-ai/claude-code
 
 # Copy plugin structure
-COPY .claude-plugin/ .claude-plugin/
-COPY skills/ skills/
-COPY agents/ agents/
-COPY commands/ commands/
-COPY hooks/ hooks/
+COPY plugins/ plugins/
 
 # Copy test scripts
 COPY integration_tests/*.sh /workspace/integration_tests/
 RUN chmod +x /workspace/integration_tests/*.sh
 
-# Run integration tests during build
-RUN /workspace/integration_tests/validate-manifest.sh && \
-    /workspace/integration_tests/test-plugin-loading.sh && \
-    /workspace/integration_tests/test-component-discovery.sh
+# Run integration tests for all plugins during build
+RUN /workspace/integration_tests/run.sh
 
 RUN addgroup -S app && adduser -S -G app app && chown -R app:app /workspace
 

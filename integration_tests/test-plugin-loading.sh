@@ -24,11 +24,15 @@ if ! command -v claude >/dev/null 2>&1; then
 	exit 0
 fi
 
+# Default plugin directory
+PLUGIN_DIR="${1:-.}"
+MANIFEST_PATH="${PLUGIN_DIR}/.claude-plugin/plugin.json"
+
 # Get plugin name from manifest
 if command -v jq >/dev/null 2>&1; then
-	plugin_name="$(jq -r '.name' .claude-plugin/plugin.json)"
+	plugin_name="$(jq -r '.name' "${MANIFEST_PATH}")"
 elif command -v node >/dev/null 2>&1; then
-	plugin_name="$(node -p "require('./.claude-plugin/plugin.json').name")"
+	plugin_name="$(node -p "require('${MANIFEST_PATH}').name")"
 else
 	echo "ERROR: Cannot read manifest. Neither jq nor node is available."
 	exit 1
@@ -38,18 +42,18 @@ echo "Testing plugin loading for: ${plugin_name}"
 
 # Test 1: Plugin loads without errors
 echo "Testing plugin loading with --plugin-dir..."
-if ! claude --plugin-dir . --help >/dev/null 2>&1; then
-	echo "ERROR: Plugin failed to load with 'claude --plugin-dir . --help'"
-	claude --plugin-dir . --help || true
+if ! claude --plugin-dir "${PLUGIN_DIR}" --help >/dev/null 2>&1; then
+	echo "ERROR: Plugin failed to load with 'claude --plugin-dir ${PLUGIN_DIR} --help'"
+	claude --plugin-dir "${PLUGIN_DIR}" --help || true
 	exit 1
 fi
 echo "Plugin loaded successfully"
 
 # Test 2: Plugin manifest validates via Claude CLI
 echo "Testing plugin manifest validation via Claude CLI..."
-if ! claude plugin validate . >/dev/null 2>&1; then
-	echo "ERROR: Plugin validation failed with 'claude plugin validate .'"
-	claude plugin validate . || true
+if ! claude plugin validate "${PLUGIN_DIR}" >/dev/null 2>&1; then
+	echo "ERROR: Plugin validation failed with 'claude plugin validate ${PLUGIN_DIR}'"
+	claude plugin validate "${PLUGIN_DIR}" || true
 	exit 1
 fi
 echo "Plugin validation test passed"

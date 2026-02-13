@@ -71,13 +71,14 @@ PASSED_TESTS=0
 run_test() {
 	test_name="$1"
 	test_script="$2"
+	plugin_path="$3"
 
 	if [[ ${VERBOSE} == true ]]; then
 		echo ""
-		echo "=== Running ${test_name} ==="
+		echo "=== Running ${test_name} [${plugin_path}] ==="
 	fi
 
-	if "${SCRIPT_DIR}/${test_script}"; then
+	if "${SCRIPT_DIR}/${test_script}" "${plugin_path}"; then
 		PASSED_TESTS=$((PASSED_TESTS + 1))
 		if [[ ${VERBOSE} == true ]]; then
 			echo "? ${test_name} passed"
@@ -95,29 +96,55 @@ run_test() {
 
 run_test_nonfatal() {
 	set +e
-	run_test "$1" "$2"
+	run_test "$1" "$2" "$3"
 	set -e
 }
 
-echo "Starting integration tests..."
+echo "Starting integration tests for all plugins..."
 
-# Test 1: Validate manifest
-run_test_nonfatal "Manifest validation" "validate-manifest.sh"
-
-if [[ ${MANIFEST_ONLY} == true ]]; then
-	echo ""
-	echo "Manifest-only mode: skipping remaining tests"
-else
-	# Test 2: Plugin loading (unless skipped)
-	if [[ ${SKIP_LOADING} == false ]]; then
-		run_test_nonfatal "Plugin loading" "test-plugin-loading.sh"
-	else
-		echo "Skipping plugin loading tests (--skip-loading)"
-	fi
-
-	# Test 3: Component discovery
-	run_test_nonfatal "Component discovery" "test-component-discovery.sh"
+# Discover plugins
+PLUGINS=()
+if [[ -d "plugins" ]]; then
+	for d in plugins/*/; do
+		if [[ -d "${d}.claude-plugin" ]]; then
+			PLUGINS+=("${d%/}")
+		fi
+	done
 fi
+
+# Fallback to root if no plugins found in plugins/ (for backward compatibility during migration)
+if [[ ${#PLUGINS[@]} -eq 0 ]]; then
+	if [[ -d ".claude-plugin" ]]; then
+		PLUGINS+=(".")
+	fi
+fi
+
+if [[ ${#PLUGINS[@]} -eq 0 ]]; then
+	echo "No plugins found to test."
+	exit 0
+fi
+
+for plugin in "${PLUGINS[@]}"; do
+	echo ""
+	echo ">>> Testing plugin: ${plugin}"
+
+	# Test 1: Validate manifest
+	run_test_nonfatal "Manifest validation" "validate-manifest.sh" "${plugin}"
+
+	if [[ ${MANIFEST_ONLY} == true ]]; then
+		echo "Manifest-only mode: skipping remaining tests for ${plugin}"
+	else
+		# Test 2: Plugin loading (unless skipped)
+		if [[ ${SKIP_LOADING} == false ]]; then
+			run_test_nonfatal "Plugin loading" "test-plugin-loading.sh" "${plugin}"
+		else
+			echo "Skipping plugin loading tests (--skip-loading)"
+		fi
+
+		# Test 3: Component discovery
+		run_test_nonfatal "Component discovery" "test-component-discovery.sh" "${plugin}"
+	fi
+done
 
 # Summary
 echo ""
