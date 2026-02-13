@@ -1,77 +1,71 @@
-# Claude Plugin Template
+# Claude Plugin Monorepo Template
 
-Template repository for bootstrapping a Claude Code plugin with:
+Template repository for bootstrapping high-quality Claude Code plugins with shared CI/CD and testing infrastructure.
 
-- plugin manifest (`.claude-plugin/plugin.json`)
-- skills (`skills/**/SKILL.md`)
-- agents (`agents/*.md`)
-- hooks (`hooks/hooks.json`)
-- quality checks (`trunk` + GitHub Actions)
-- integration smoke tests (`integration_tests/`)
+## Key Features
 
-## Quickstart
-
-1. Create a new repository from this template.
-2. Update `.claude-plugin/plugin.json` (`name`, `version`, `description`, `author`, `repository`).
-3. Replace sample components with your own:
-   - `skills/hello-world/SKILL.md`
-   - `agents/say-hello-agent.md`
-   - `hooks/hooks.json`
-4. Run local checks:
-   - `make lint`
-   - `make test-integration-docker`
+- **Standard Plugin Layout**: Follows best practices for Skills, Agents, Hooks, MCP, and LSP.
+- **Monorepo Ready**: Designed to host multiple plugins under the `plugins/` directory.
+- **Comprehensive Examples**: The `hello-world` plugin demonstrates every available extension point.
+- **Shared CI/CD**: Unified quality checks via `trunk` and GitHub Actions.
+- **Integration Tests**: Automated smoke tests that validate manifest schemas and component discovery across all plugins.
 
 ## Repository Layout
 
 ```text
-.claude-plugin/
-  plugin.json                    # Claude plugin metadata
-agents/
-  say-hello-agent.md             # Example agent
-commands/
-  .gitkeep                       # Optional command definitions
-hooks/
-  hooks.json                     # Hook config
-integration_tests/
-  Dockerfile                     # Smoke test image
-  run.sh                         # Orchestrates integration scripts
-  validate-manifest.sh
-  test-plugin-loading.sh
-  test-component-discovery.sh
-skills/
-  hello-world/
-    SKILL.md                     # Example skill
-.github/workflows/
-  integration_tests.yml          # Plugin smoke tests
-  trunk_check.yml                # Lint checks
-  trunk_upgrade.yml              # Scheduled Trunk upgrades
+.
+├── plugins/                     # Container for all plugins
+│   └── hello-world/             # Comprehensive sample plugin
+│       ├── .claude-plugin/      # Plugin metadata (plugin.json)
+│       ├── agents/              # Custom agent definitions
+│       ├── skills/              # Model-invoked skills (SKILL.md)
+│       ├── hooks/               # Event hook configurations
+│       ├── .mcp.json            # MCP server configuration
+│       └── .lsp.json            # LSP server configuration
+├── integration_tests/           # Shared testing harness
+│   ├── run.sh                   # Test orchestrator (scans plugins/)
+│   ├── validate-manifest.sh     # Manifest JSON schema validator
+│   └── ...
+├── .github/workflows/           # GitHub Actions (Lint, Integration Tests)
+├── Makefile                     # Task runner
+└── README.md
 ```
 
-## Local Development
+## Quickstart
 
-- `make format`: format files with Trunk
-- `make lint`: run all linters via Trunk
-- `make test-integration-docker`: run integration tests in Docker
+1.  **Create a new repository** from this template.
+2.  **Explore the sample plugin** in `plugins/hello-world/` to see how components are defined.
+3.  **Run local checks**:
+    ```bash
+    make lint
+    make test-integration-docker
+    ```
 
-You can also run integration tests directly:
+## Development
 
-- `./integration_tests/run.sh`
-- `./integration_tests/run.sh --manifest-only`
-- `./integration_tests/run.sh --verbose`
+### Adding a New Plugin
 
-## CI
+Create a new directory in `plugins/` following the [Standard Plugin Layout](https://code.claude.com/docs/en/plugins-reference#standard-plugin-layout):
 
-GitHub Actions includes:
+- `plugins/<name>/.claude-plugin/plugin.json`: Required manifest.
+- `plugins/<name>/skills/`: Agent Skills folder.
+- `plugins/<name>/agents/`: Subagent markdown files.
+- `plugins/<name>/hooks/`: Event hook configurations.
+- `plugins/<name>/.mcp.json`: MCP configurations.
+- `plugins/<name>/.lsp.json`: LSP configurations.
 
-- `.github/workflows/trunk_check.yml`: lint and static checks
-- `.github/workflows/integration_tests.yml`: manifest validation and plugin loading smoke tests
-- `.github/workflows/trunk_upgrade.yml`: weekly Trunk dependency updates
+### Testing
 
-## Release
+The integration test runner (`./integration_tests/run.sh`) automatically discovers all directories in `plugins/` that contain a `.claude-plugin/plugin.json` file.
 
-1. Update `.claude-plugin/plugin.json` version.
-2. Tag and publish a release.
-3. Share your repository as the plugin entry point/template.
+- Run all tests: `./integration_tests/run.sh`
+- Verbose output: `./integration_tests/run.sh --verbose`
+- Skip loading tests (if Claude CLI is not installed): `./integration_tests/run.sh --skip-loading`
+
+## CI/CD
+
+- **Trunk Check**: Runs linters and static analysis on every PR.
+- **Integration Tests**: Automatically validates every plugin in the `plugins/` directory.
 
 ## License
 

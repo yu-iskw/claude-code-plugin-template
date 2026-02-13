@@ -17,8 +17,9 @@
 # Validate plugin manifest JSON schema and required fields
 set -euo pipefail
 
-# Default manifest path
-MANIFEST_PATH="${1:-.claude-plugin/plugin.json}"
+# Default plugin directory
+PLUGIN_DIR="${1:-.}"
+MANIFEST_PATH="${PLUGIN_DIR}/.claude-plugin/plugin.json"
 
 # Check if manifest file exists
 if [[ ! -f ${MANIFEST_PATH} ]]; then
