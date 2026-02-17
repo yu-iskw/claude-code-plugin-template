@@ -28,22 +28,17 @@ if [[ ! -f ${skill_file} ]]; then
 	exit 1
 fi
 
-if ! command -v rg >/dev/null 2>&1; then
-	echo "ERROR: 'rg' is required for frontmatter checks." >&2
-	exit 1
-fi
-
-if ! rg -q '^---$' "${skill_file}"; then
+if ! grep -q '^---$' "${skill_file}"; then
 	echo "ERROR: Missing frontmatter delimiters in ${skill_file}" >&2
 	exit 1
 fi
 
-if ! rg -q '^name:\s*.+$' "${skill_file}"; then
+if ! grep -E -q '^name:[[:space:]]*.+$' "${skill_file}"; then
 	echo "ERROR: Missing required frontmatter field: name" >&2
 	exit 1
 fi
 
-if ! rg -q '^description:\s*.+$' "${skill_file}"; then
+if ! grep -E -q '^description:[[:space:]]*.+$' "${skill_file}"; then
 	echo "ERROR: Missing required frontmatter field: description" >&2
 	exit 1
 fi

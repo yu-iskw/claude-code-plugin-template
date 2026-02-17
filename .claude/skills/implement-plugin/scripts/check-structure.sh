@@ -46,35 +46,28 @@ done
 
 # Every skill directory should contain SKILL.md.
 if [[ -d "${plugin_root}/skills" ]]; then
-	for skill_dir in "${plugin_root}/skills"/*; do
-		if [[ ! -d ${skill_dir} ]]; then
-			continue
-		fi
+	while IFS= read -r -d '' skill_dir; do
 		if [[ ! -f "${skill_dir}/SKILL.md" ]]; then
 			echo "ERROR: Skill '${skill_dir}' is missing SKILL.md." >&2
 			exit 1
 		fi
-	done
+	done < <(find "${plugin_root}/skills" -maxdepth 1 -mindepth 1 -type d -print0 || true)
 
 	# Detect misplaced top-level skill markdown files.
-	for bad_file in "${plugin_root}/skills"/*.md; do
-		if [[ ! -f ${bad_file} ]]; then
-			continue
-		fi
+	while IFS= read -r -d '' bad_file; do
 		echo "ERROR: Misplaced skill file '${bad_file}'. Expected skills/<name>/SKILL.md." >&2
 		exit 1
-	done
+	done < <(find "${plugin_root}/skills" -maxdepth 1 -name "*.md" -type f -print0 || true)
 fi
 
 # Agent definitions should be markdown files.
 if [[ -d "${plugin_root}/agents" ]]; then
-	for bad_file in "${plugin_root}/agents"/*; do
-		if [[ ! -f ${bad_file} || ${bad_file} == *.md ]]; then
-			continue
+	while IFS= read -r -d '' bad_file; do
+		if [[ ${bad_file} != *.md ]]; then
+			echo "ERROR: Non-markdown file in agents/: ${bad_file}" >&2
+			exit 1
 		fi
-		echo "ERROR: Non-markdown file in agents/: ${bad_file}" >&2
-		exit 1
-	done
+	done < <(find "${plugin_root}/agents" -maxdepth 1 -mindepth 1 -type f -print0 || true)
 fi
 
 echo "OK: Directory structure checks passed (${plugin_root})."

@@ -23,14 +23,11 @@ if [[ ! -d ${skills_root} ]]; then
 	exit 1
 fi
 
-for skill_dir in "${skills_root}"/*; do
-	if [[ ! -d ${skill_dir} ]]; then
-		continue
-	fi
+while IFS= read -r -d '' skill_dir; do
 	if [[ ! -f "${skill_dir}/SKILL.md" ]]; then
 		echo "ERROR: Missing SKILL.md in '${skill_dir}'." >&2
 		exit 1
 	fi
-done
+done < <(find "${skills_root}" -maxdepth 1 -mindepth 1 -type d -print0 || true)
 
 echo "OK: Skill structure validation passed (${skills_root})."
