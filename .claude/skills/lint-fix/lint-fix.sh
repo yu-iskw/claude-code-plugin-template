@@ -33,6 +33,12 @@ if [[ -n "${CI:-}" ]] || [[ -n "${GITHUB_ACTIONS:-}" ]] || [[ -n "${GITLAB_CI:-}
 	IS_CI=true
 fi
 
+# Check if running in interactive terminal
+IS_INTERACTIVE=false
+if [[ -t 0 ]]; then
+	IS_INTERACTIVE=true
+fi
+
 # Check if trunk is available
 trunk_available() {
 	command -v trunk >/dev/null 2>&1
@@ -48,12 +54,43 @@ install_trunk() {
 	echo "trunk is not installed. Setting up..."
 
 	if [[ "${IS_CI}" == true ]]; then
-		# In CI environment, use npx
-		echo "ℹ CI environment detected, using npx for trunk"
+		# In CI environment, auto-install without prompting
+		echo "ℹ CI environment detected, installing trunk automatically"
+		if [[ "${PLATFORM}" == "macos" ]]; then
+			brew install trunk-io/trunk/trunk || {
+				echo "WARNING: Failed to install trunk with homebrew, will use npx"
+				return 0
+			}
+		else
+			curl https://get.trunk.io -fsSL | bash || {
+				echo "WARNING: Failed to install trunk, will use npx"
+				return 0
+			}
+			export PATH="$HOME/.local/share/trunk/bin:$PATH"
+		fi
 		return 0
 	fi
 
-	# On local machine, ask for permission
+	# On local machine, check if interactive
+	if [[ "${IS_INTERACTIVE}" == false ]]; then
+		# Non-interactive environment (e.g., automated testing), auto-install
+		echo "ℹ Non-interactive environment detected, installing trunk automatically"
+		if [[ "${PLATFORM}" == "macos" ]]; then
+			brew install trunk-io/trunk/trunk || {
+				echo "WARNING: Failed to install trunk with homebrew, will use npx"
+				return 0
+			}
+		else
+			curl https://get.trunk.io -fsSL | bash || {
+				echo "WARNING: Failed to install trunk, will use npx"
+				return 0
+			}
+			export PATH="$HOME/.local/share/trunk/bin:$PATH"
+		fi
+		return 0
+	fi
+
+	# Interactive local machine - ask for permission
 	if [[ "${PLATFORM}" == "macos" ]]; then
 		echo ""
 		echo "Install trunk using Homebrew?"
@@ -105,6 +142,7 @@ run_trunk() {
 echo "=== Starting lint and format checks ==="
 echo "Platform: ${PLATFORM}"
 echo "CI Environment: ${IS_CI}"
+echo "Interactive Terminal: ${IS_INTERACTIVE}"
 echo ""
 
 # Try to install trunk if needed
