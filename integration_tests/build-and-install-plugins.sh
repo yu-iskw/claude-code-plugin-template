@@ -55,28 +55,44 @@ FAILED_INSTALLS=0
 
 for plugin in "${PLUGINS[@]}"; do
 	echo ""
-	echo ">>> Building and installing plugin: ${plugin}"
+	echo ">>> Building plugin: ${plugin}"
 
 	# Build plugin artifact
 	echo "Building plugin artifact..."
-	if ! ARTIFACT_PATH=$("${SCRIPT_DIR}/build-plugin.sh" "${plugin}" 2>&1 | tail -1); then
-		echo "ERROR: Failed to build artifact for plugin: ${plugin}"
+	ARTIFACT_PATH=$("${SCRIPT_DIR}/build-plugin.sh" "${plugin}" 2>&1 | tail -1)
+
+	if [[ -z "${ARTIFACT_PATH}" ]]; then
+		echo "ERROR: Failed to get artifact path for plugin: ${plugin}"
 		FAILED_INSTALLS=$((FAILED_INSTALLS + 1))
 		continue
 	fi
 
-	# Extract plugin to Claude plugins directory
-	echo "Installing plugin..."
-	PLUGINS_DIR="${HOME}/.claude/plugins"
-	mkdir -p "${PLUGINS_DIR}"
-
-	if ! tar -xzf "${ARTIFACT_PATH}" -C "${PLUGINS_DIR}"; then
-		echo "ERROR: Failed to extract plugin: ${plugin}"
+	if [[ ! -f "${ARTIFACT_PATH}" ]]; then
+		echo "ERROR: Plugin artifact not created for: ${plugin}"
 		FAILED_INSTALLS=$((FAILED_INSTALLS + 1))
 		continue
 	fi
 
-	echo "Plugin '${plugin}' built and installed successfully"
+	# Verify artifact can be extracted
+	echo "Verifying artifact structure..."
+	TEMP_DIR=$(mktemp -d)
+	if ! tar -xzf "${ARTIFACT_PATH}" -C "${TEMP_DIR}"; then
+		echo "ERROR: Failed to extract plugin artifact for: ${plugin}"
+		rm -rf "${TEMP_DIR}"
+		FAILED_INSTALLS=$((FAILED_INSTALLS + 1))
+		continue
+	fi
+
+	# Verify manifest exists in artifact
+	if [[ ! -f "${TEMP_DIR}/${plugin}/.claude-plugin/plugin.json" ]]; then
+		echo "ERROR: Plugin manifest not found in artifact for: ${plugin}"
+		rm -rf "${TEMP_DIR}"
+		FAILED_INSTALLS=$((FAILED_INSTALLS + 1))
+		continue
+	fi
+
+	rm -rf "${TEMP_DIR}"
+	echo "Plugin '${plugin}' artifact verified successfully"
 done
 
 echo ""

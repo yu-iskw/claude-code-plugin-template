@@ -59,58 +59,53 @@ fi
 
 if [[ ! -f "${ARTIFACT_PATH}" ]]; then
 	echo "ERROR: Plugin artifact not created at ${ARTIFACT_PATH}"
-	echo "Expected path: ${ARTIFACT_PATH}"
 	exit 1
 fi
 
 echo "Plugin artifact created: ${ARTIFACT_PATH}"
 
-# Step 2: Create plugins directory and install
-echo "Step 2: Installing plugin to Claude plugins directory..."
-PLUGINS_DIR="${HOME}/.claude/plugins"
-mkdir -p "${PLUGINS_DIR}" || {
-	echo "ERROR: Failed to create plugins directory at ${PLUGINS_DIR}"
-	exit 1
-}
+# Step 2: Extract artifact to temporary directory
+echo "Step 2: Extracting plugin artifact..."
+TEMP_PLUGINS_DIR=$(mktemp -d)
+trap "rm -rf ${TEMP_PLUGINS_DIR}" EXIT
 
-# Extract plugin to plugins directory (use -C to avoid changing directories)
-echo "Extracting plugin artifact to ${PLUGINS_DIR}..."
-if ! tar -xzf "${ARTIFACT_PATH}" -C "${PLUGINS_DIR}"; then
+if ! tar -xzf "${ARTIFACT_PATH}" -C "${TEMP_PLUGINS_DIR}"; then
 	echo "ERROR: Failed to extract plugin artifact"
 	exit 1
 fi
 
-echo "Plugin extracted successfully"
+EXTRACTED_PLUGIN_DIR="${TEMP_PLUGINS_DIR}/${PLUGIN_NAME}"
 
-# Step 3: Verify the plugin is installed
-echo "Step 3: Verifying plugin installation..."
-if [[ ! -d "${PLUGINS_DIR}/${PLUGIN_NAME}" ]]; then
-	echo "ERROR: Plugin directory not found at ${PLUGINS_DIR}/${PLUGIN_NAME}"
-	ls -la "${PLUGINS_DIR}"
+# Step 3: Verify the artifact structure
+echo "Step 3: Verifying artifact structure..."
+if [[ ! -d "${EXTRACTED_PLUGIN_DIR}" ]]; then
+	echo "ERROR: Plugin directory not found in extracted artifact"
+	ls -la "${TEMP_PLUGINS_DIR}"
 	exit 1
 fi
 
-if [[ ! -f "${PLUGINS_DIR}/${PLUGIN_NAME}/.claude-plugin/plugin.json" ]]; then
-	echo "ERROR: Plugin manifest not found in installed plugin"
+if [[ ! -f "${EXTRACTED_PLUGIN_DIR}/.claude-plugin/plugin.json" ]]; then
+	echo "ERROR: Plugin manifest not found in extracted artifact"
 	exit 1
 fi
 
-echo "Plugin '${PLUGIN_NAME}' is installed at ${PLUGINS_DIR}/${PLUGIN_NAME}"
+echo "Artifact structure verified"
 
-# Step 4: Test that the plugin loads with Claude CLI (without --plugin-dir flag)
-echo "Step 4: Testing plugin loading from installed location..."
-if ! claude --help >/dev/null 2>&1; then
-	echo "ERROR: Claude CLI failed after plugin installation"
+# Step 4: Test plugin loads from extracted location with --plugin-dir
+echo "Step 4: Testing plugin loading via --plugin-dir..."
+if ! claude --plugin-dir "${EXTRACTED_PLUGIN_DIR}" --help >/dev/null 2>&1; then
+	echo "ERROR: Plugin failed to load from extracted artifact"
+	claude --plugin-dir "${EXTRACTED_PLUGIN_DIR}" --help || true
 	exit 1
 fi
 
-echo "Plugin loads successfully with Claude CLI"
+echo "Plugin loads successfully from artifact"
 
 # Step 5: Validate plugin configuration
 echo "Step 5: Validating plugin configuration..."
-if ! claude plugin validate "${PLUGINS_DIR}/${PLUGIN_NAME}" >/dev/null 2>&1; then
+if ! claude plugin validate "${EXTRACTED_PLUGIN_DIR}" >/dev/null 2>&1; then
 	echo "ERROR: Plugin validation failed"
-	claude plugin validate "${PLUGINS_DIR}/${PLUGIN_NAME}" || true
+	claude plugin validate "${EXTRACTED_PLUGIN_DIR}" || true
 	exit 1
 fi
 
