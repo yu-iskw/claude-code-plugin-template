@@ -52,10 +52,14 @@ echo "Testing plugin installation for: ${PLUGIN_NAME}"
 
 # Step 1: Build the plugin artifact
 echo "Step 1: Building plugin artifact..."
-ARTIFACT_PATH=$("${SCRIPT_DIR}/build-plugin.sh" "${PLUGIN_DIR}")
+if ! ARTIFACT_PATH=$("${SCRIPT_DIR}/build-plugin.sh" "${PLUGIN_DIR}" 2>&1 | tail -1); then
+	echo "ERROR: Failed to build plugin artifact"
+	exit 1
+fi
 
 if [[ ! -f "${ARTIFACT_PATH}" ]]; then
 	echo "ERROR: Plugin artifact not created at ${ARTIFACT_PATH}"
+	echo "Expected path: ${ARTIFACT_PATH}"
 	exit 1
 fi
 
@@ -64,12 +68,17 @@ echo "Plugin artifact created: ${ARTIFACT_PATH}"
 # Step 2: Create plugins directory and install
 echo "Step 2: Installing plugin to Claude plugins directory..."
 PLUGINS_DIR="${HOME}/.claude/plugins"
-mkdir -p "${PLUGINS_DIR}"
+mkdir -p "${PLUGINS_DIR}" || {
+	echo "ERROR: Failed to create plugins directory at ${PLUGINS_DIR}"
+	exit 1
+}
 
-# Extract plugin to plugins directory
+# Extract plugin to plugins directory (use -C to avoid changing directories)
 echo "Extracting plugin artifact to ${PLUGINS_DIR}..."
-cd "${PLUGINS_DIR}"
-tar -xzf "${ARTIFACT_PATH}"
+if ! tar -xzf "${ARTIFACT_PATH}" -C "${PLUGINS_DIR}"; then
+	echo "ERROR: Failed to extract plugin artifact"
+	exit 1
+fi
 
 echo "Plugin extracted successfully"
 

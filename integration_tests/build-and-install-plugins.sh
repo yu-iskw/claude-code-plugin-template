@@ -59,7 +59,7 @@ for plugin in "${PLUGINS[@]}"; do
 
 	# Build plugin artifact
 	echo "Building plugin artifact..."
-	if ! ARTIFACT_PATH=$("${SCRIPT_DIR}/build-plugin.sh" "${plugin}"); then
+	if ! ARTIFACT_PATH=$("${SCRIPT_DIR}/build-plugin.sh" "${plugin}" 2>&1 | tail -1); then
 		echo "ERROR: Failed to build artifact for plugin: ${plugin}"
 		FAILED_INSTALLS=$((FAILED_INSTALLS + 1))
 		continue
