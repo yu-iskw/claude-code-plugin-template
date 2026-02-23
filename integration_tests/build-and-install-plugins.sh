@@ -84,7 +84,9 @@ for plugin in "${PLUGINS[@]}"; do
 	fi
 
 	# Verify manifest exists in artifact
-	if [[ ! -f "${TEMP_DIR}/${plugin}/.claude-plugin/plugin.json" ]]; then
+	# Extract plugin name from path (e.g., "plugins/hello-world" -> "hello-world")
+	PLUGIN_NAME="${plugin##*/}"
+	if [[ ! -f "${TEMP_DIR}/${PLUGIN_NAME}/.claude-plugin/plugin.json" ]]; then
 		echo "ERROR: Plugin manifest not found in artifact for: ${plugin}"
 		rm -rf "${TEMP_DIR}"
 		FAILED_INSTALLS=$((FAILED_INSTALLS + 1))
