@@ -59,9 +59,14 @@ echo "Output: ${ARTIFACT_PATH}"
 BUILD_DIR=$(mktemp -d)
 trap "rm -rf ${BUILD_DIR}" EXIT
 
-# Copy plugin files to build directory
+# Copy plugin files to build directory (including hidden files)
 mkdir -p "${BUILD_DIR}/${PLUGIN_NAME}"
+# Copy all files and directories, including hidden ones
+shopt -s dotglob
 cp -r "${PLUGIN_DIR}"/* "${BUILD_DIR}/${PLUGIN_NAME}/"
+shopt -u dotglob
+# Remove the dist directory if it was copied (we don't want to include artifacts)
+rm -rf "${BUILD_DIR}/${PLUGIN_NAME}/dist" 2>/dev/null || true
 
 # Create tarball from build directory
 cd "${BUILD_DIR}"
