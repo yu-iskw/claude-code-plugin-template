@@ -57,7 +57,7 @@ echo "Output: ${ARTIFACT_PATH}"
 
 # Create a temporary directory for building the archive
 BUILD_DIR=$(mktemp -d)
-trap "rm -rf ${BUILD_DIR}" EXIT
+trap 'rm -rf "${BUILD_DIR}"' EXIT
 
 # Copy plugin files to build directory (including hidden files)
 mkdir -p "${BUILD_DIR}/${PLUGIN_NAME}"
