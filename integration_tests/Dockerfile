@@ -13,6 +13,9 @@ COPY plugins/ plugins/
 COPY integration_tests/*.sh /workspace/integration_tests/
 RUN chmod +x /workspace/integration_tests/*.sh
 
+# Build and install plugins
+RUN /workspace/integration_tests/build-and-install-plugins.sh
+
 # Run integration tests for all plugins during build
 RUN /workspace/integration_tests/run.sh
 

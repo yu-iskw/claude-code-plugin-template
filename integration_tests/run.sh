@@ -134,14 +134,21 @@ for plugin in "${PLUGINS[@]}"; do
 	if [[ ${MANIFEST_ONLY} == true ]]; then
 		echo "Manifest-only mode: skipping remaining tests for ${plugin}"
 	else
-		# Test 2: Plugin loading (unless skipped)
+		# Test 2: Plugin installation (unless skipped)
+		if [[ ${SKIP_LOADING} == false ]]; then
+			run_test_nonfatal "Plugin installation" "test-plugin-install.sh" "${plugin}"
+		else
+			echo "Skipping plugin installation tests (--skip-loading)"
+		fi
+
+		# Test 3: Plugin loading (unless skipped)
 		if [[ ${SKIP_LOADING} == false ]]; then
 			run_test_nonfatal "Plugin loading" "test-plugin-loading.sh" "${plugin}"
 		else
 			echo "Skipping plugin loading tests (--skip-loading)"
 		fi
 
-		# Test 3: Component discovery
+		# Test 4: Component discovery
 		run_test_nonfatal "Component discovery" "test-component-discovery.sh" "${plugin}"
 	fi
 done
