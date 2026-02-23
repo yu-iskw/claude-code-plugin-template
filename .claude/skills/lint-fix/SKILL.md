@@ -16,7 +16,7 @@ Run formatting and lint checks using trunk. This skill automatically handles tru
 
 2. **Install trunk (if needed)**
    - On macOS: Use Homebrew (`brew install trunk-io/trunk/trunk`)
-   - On other platforms: Use npx (`npx trunk`)
+   - On Linux: Use official installer (`curl https://get.trunk.io -fsSL | bash`)
    - On local machines: Ask user permission before installing
 
 3. **Run linting operations**
@@ -43,7 +43,7 @@ The skill:
 - Detects your platform automatically (macOS, Linux, etc.)
 - Checks if trunk is already installed
 - For local machines: Asks for permission before installing trunk
-- For CI/remote environments: Uses npx automatically
+- For CI/remote environments: Auto-detects and uses available tools
 - Runs both formatting and linting checks
 - Reports results clearly
 
