@@ -69,8 +69,11 @@ shopt -u dotglob
 rm -rf "${BUILD_DIR}/${PLUGIN_NAME}/dist" 2>/dev/null || true
 
 # Create tarball from build directory
-cd "${BUILD_DIR}"
-tar -czf "${ARTIFACT_PATH}" "${PLUGIN_NAME}/"
+cd "${BUILD_DIR}" || exit 1
+if ! tar -czf "${ARTIFACT_PATH}" "${PLUGIN_NAME}/"; then
+	echo "ERROR: Failed to create tar archive"
+	exit 1
+fi
 
 echo "Plugin artifact created successfully: ${ARTIFACT_PATH}"
 echo "${ARTIFACT_PATH}"
