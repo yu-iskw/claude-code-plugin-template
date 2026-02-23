@@ -67,7 +67,7 @@ echo "Plugin artifact created: ${ARTIFACT_PATH}"
 # Step 2: Extract artifact to temporary directory
 echo "Step 2: Extracting plugin artifact..."
 TEMP_PLUGINS_DIR=$(mktemp -d)
-trap "rm -rf ${TEMP_PLUGINS_DIR}" EXIT
+trap 'rm -rf "${TEMP_PLUGINS_DIR}"' EXIT
 
 if ! tar -xzf "${ARTIFACT_PATH}" -C "${TEMP_PLUGINS_DIR}"; then
 	echo "ERROR: Failed to extract plugin artifact"
