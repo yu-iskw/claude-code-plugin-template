@@ -65,10 +65,13 @@ for plugin in "${PLUGINS[@]}"; do
 		continue
 	fi
 
-	# Install plugin
+	# Extract plugin to Claude plugins directory
 	echo "Installing plugin..."
-	if ! claude plugin install "${ARTIFACT_PATH}"; then
-		echo "ERROR: Failed to install plugin: ${plugin}"
+	PLUGINS_DIR="${HOME}/.claude/plugins"
+	mkdir -p "${PLUGINS_DIR}"
+
+	if ! tar -xzf "${ARTIFACT_PATH}" -C "${PLUGINS_DIR}"; then
+		echo "ERROR: Failed to extract plugin: ${plugin}"
 		FAILED_INSTALLS=$((FAILED_INSTALLS + 1))
 		continue
 	fi

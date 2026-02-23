@@ -61,29 +61,35 @@ fi
 
 echo "Plugin artifact created: ${ARTIFACT_PATH}"
 
-# Step 2: Install the plugin
-echo "Step 2: Installing plugin..."
-if ! claude plugin install "${ARTIFACT_PATH}" 2>&1; then
-	echo "ERROR: Failed to install plugin from ${ARTIFACT_PATH}"
-	claude plugin install "${ARTIFACT_PATH}" || true
-	exit 1
-fi
+# Step 2: Create plugins directory and install
+echo "Step 2: Installing plugin to Claude plugins directory..."
+PLUGINS_DIR="${HOME}/.claude/plugins"
+mkdir -p "${PLUGINS_DIR}"
 
-echo "Plugin installed successfully"
+# Extract plugin to plugins directory
+echo "Extracting plugin artifact to ${PLUGINS_DIR}..."
+cd "${PLUGINS_DIR}"
+tar -xzf "${ARTIFACT_PATH}"
 
-# Step 3: Verify the plugin is listed
+echo "Plugin extracted successfully"
+
+# Step 3: Verify the plugin is installed
 echo "Step 3: Verifying plugin installation..."
-if ! claude plugin list 2>&1 | grep -q "${PLUGIN_NAME}"; then
-	echo "ERROR: Plugin '${PLUGIN_NAME}' not found in installed plugins list"
-	echo "Installed plugins:"
-	claude plugin list || true
+if [[ ! -d "${PLUGINS_DIR}/${PLUGIN_NAME}" ]]; then
+	echo "ERROR: Plugin directory not found at ${PLUGINS_DIR}/${PLUGIN_NAME}"
+	ls -la "${PLUGINS_DIR}"
 	exit 1
 fi
 
-echo "Plugin '${PLUGIN_NAME}' is installed and listed"
+if [[ ! -f "${PLUGINS_DIR}/${PLUGIN_NAME}/.claude-plugin/plugin.json" ]]; then
+	echo "ERROR: Plugin manifest not found in installed plugin"
+	exit 1
+fi
 
-# Step 4: Test that the plugin loads with Claude CLI
-echo "Step 4: Testing plugin loading..."
+echo "Plugin '${PLUGIN_NAME}' is installed at ${PLUGINS_DIR}/${PLUGIN_NAME}"
+
+# Step 4: Test that the plugin loads with Claude CLI (without --plugin-dir flag)
+echo "Step 4: Testing plugin loading from installed location..."
 if ! claude --help >/dev/null 2>&1; then
 	echo "ERROR: Claude CLI failed after plugin installation"
 	exit 1
@@ -93,9 +99,9 @@ echo "Plugin loads successfully with Claude CLI"
 
 # Step 5: Validate plugin configuration
 echo "Step 5: Validating plugin configuration..."
-if ! claude plugin validate "${PLUGIN_DIR}" >/dev/null 2>&1; then
+if ! claude plugin validate "${PLUGINS_DIR}/${PLUGIN_NAME}" >/dev/null 2>&1; then
 	echo "ERROR: Plugin validation failed"
-	claude plugin validate "${PLUGIN_DIR}" || true
+	claude plugin validate "${PLUGINS_DIR}/${PLUGIN_NAME}" || true
 	exit 1
 fi
 
