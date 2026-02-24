@@ -29,3 +29,14 @@ jobs:
 
       - name: Run all plugin integration tests
         run: ./integration_tests/run.sh --verbose
+
+  plugin-install-docker:
+    name: Plugin Install in Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Build Docker image
+        run: docker build -f integration_tests/Dockerfile -t plugin-smoke .
+      - name: Run integration tests in container
+        run: docker run --rm plugin-smoke

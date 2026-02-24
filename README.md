@@ -8,7 +8,7 @@ Template repository for bootstrapping high-quality Claude Code plugins with shar
 - **Monorepo Ready**: Designed to host multiple plugins under the `plugins/` directory.
 - **Comprehensive Examples**: The `hello-world` plugin demonstrates every available extension point.
 - **Shared CI/CD**: Unified quality checks via `trunk` and GitHub Actions.
-- **Integration Tests**: Automated smoke tests that validate manifest schemas and component discovery across all plugins.
+- **Integration Tests**: Automated smoke tests that validate manifest schemas, component discovery, and **plugin installation** (marketplace add + install + list/validate) across all plugins.
 
 ## Repository Layout
 
@@ -61,6 +61,8 @@ The integration test runner (`./integration_tests/run.sh`) automatically discove
 - Run all tests: `./integration_tests/run.sh`
 - Verbose output: `./integration_tests/run.sh --verbose`
 - Skip loading tests (if Claude CLI is not installed): `./integration_tests/run.sh --skip-loading`
+
+Docker integration tests (`make test-integration-docker`) run the same suite inside a container and additionally run a **plugin install** test: they add the workspace as a marketplace, install each plugin with `claude plugin install`, and verify with `claude plugin list`. The same Docker flow runs in CI (job `plugin-install-docker`).
 
 ## CI/CD
 
