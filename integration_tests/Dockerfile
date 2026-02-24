@@ -6,8 +6,9 @@ WORKDIR /workspace
 RUN apk add --no-cache bash jq && \
     npm install -g @anthropic-ai/claude-code
 
-# Copy plugin structure
+# Copy plugin structure and marketplace manifest (for install test at runtime)
 COPY plugins/ plugins/
+COPY .claude-plugin/ .claude-plugin/
 
 # Copy test scripts
 COPY integration_tests/*.sh /workspace/integration_tests/

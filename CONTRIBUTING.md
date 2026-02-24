@@ -24,12 +24,13 @@ Run these before opening a pull request:
 
 1. `make format`
 2. `make lint`
-3. `make test-integration-docker`
+3. `make test-integration-docker` (builds the image and runs all integration tests, including the plugin **install** test: marketplace add + install + list/validate)
 
 You can also run integration scripts directly:
 
 - `./integration_tests/validate-manifest.sh`
 - `./integration_tests/run.sh --verbose`
+- `./integration_tests/test-plugin-install.sh` (requires Claude CLI and a workspace with `.claude-plugin/marketplace.json`; run from repo root)
 
 ## Adding or Updating Plugin Components
 

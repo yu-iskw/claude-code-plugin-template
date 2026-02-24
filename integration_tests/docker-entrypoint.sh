@@ -19,5 +19,8 @@ set -e
 
 cd /workspace
 
+# Run plugin install test (marketplace add + install + list/validate)
+/workspace/integration_tests/test-plugin-install.sh /workspace
+
 # Run the main test script
 exec /workspace/integration_tests/run.sh "$@"
