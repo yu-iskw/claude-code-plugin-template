@@ -17,19 +17,19 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 log_error() {
-  echo -e "${RED}✗ Error: $1${NC}" >&2
+  printf '%b\n' "${RED}✗ Error: $1${NC}" >&2
 }
 
 log_success() {
-  echo -e "${GREEN}✓ $1${NC}"
+  printf '%b\n' "${GREEN}✓ $1${NC}"
 }
 
 log_warning() {
-  echo -e "${YELLOW}⚠ Warning: $1${NC}"
+  printf '%b\n' "${YELLOW}⚠ Warning: $1${NC}"
 }
 
 log_info() {
-  echo -e "${BLUE}ℹ $1${NC}"
+  printf '%b\n' "${BLUE}ℹ $1${NC}"
 }
 
 usage() {

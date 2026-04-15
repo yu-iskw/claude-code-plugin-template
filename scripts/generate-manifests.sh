@@ -16,15 +16,15 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 log_error() {
-  echo -e "${RED}✗ Error: $1${NC}" >&2
+  printf '%b\n' "${RED}✗ Error: $1${NC}" >&2
 }
 
 log_success() {
-  echo -e "${GREEN}✓ $1${NC}"
+  printf '%b\n' "${GREEN}✓ $1${NC}"
 }
 
 log_info() {
-  echo -e "${YELLOW}ℹ $1${NC}"
+  printf '%b\n' "${YELLOW}ℹ $1${NC}"
 }
 
 usage() {
