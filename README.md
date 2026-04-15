@@ -57,11 +57,11 @@ Template repository for bootstrapping high-quality plugins for **Claude Code**, 
 
 This template supports developing plugins for three platforms simultaneously:
 
-| Platform | Manifest | Marketplace | Status |
-|----------|----------|-------------|--------|
-| **Claude Code** | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | ✅ Full support |
-| **Cursor** | `.cursor-plugin/plugin.json` | `.cursor-plugin/marketplace.json` | ✅ Full support |
-| **OpenAI Codex** | `.codex-plugin/plugin.json` | `.codex-plugin/marketplace.json` | ✅ Full support |
+| Platform       | Manifest                         | Marketplace                      | Status          |
+| -------------- | -------------------------------- | -------------------------------- | --------------- |
+| **Claude Code**| `.claude-plugin/plugin.json`     | `.claude-plugin/marketplace.json`| ✅ Full support |
+| **Cursor**     | `.cursor-plugin/plugin.json`     | `.cursor-plugin/marketplace.json`| ✅ Full support |
+| **OpenAI Codex**| `.codex-plugin/plugin.json`     | `.codex-plugin/marketplace.json` | ✅ Full support |
 
 ### Getting Started with Multi-Platform
 

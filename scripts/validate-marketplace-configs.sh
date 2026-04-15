@@ -132,30 +132,30 @@ validate_claude_marketplace() {
   done
 
   # Validate icon paths if present
-  if jq -e '.icons' "$marketplace_file" > /dev/null; then
-    if jq -e '.icons.light' "$marketplace_file" > /dev/null; then
-      icon_path=$(jq -r '.icons.light' "$marketplace_file")
-      if [[ ! -f "$plugin_dir/$icon_path" ]]; then
-        log_warning "Light icon not found: $plugin_dir/$icon_path"
+  if jq -e '.icons' "${marketplace_file}" > /dev/null; then
+    if jq -e '.icons.light' "${marketplace_file}" > /dev/null; then
+      icon_path=$(jq -r '.icons.light' "${marketplace_file}")
+      if [[ ! -f "${plugin_dir}/${icon_path}" ]]; then
+        log_warning "Light icon not found: ${plugin_dir}/${icon_path}"
       fi
     fi
-    if jq -e '.icons.dark' "$marketplace_file" > /dev/null; then
-      icon_path=$(jq -r '.icons.dark' "$marketplace_file")
-      if [[ ! -f "$plugin_dir/$icon_path" ]]; then
-        log_warning "Dark icon not found: $plugin_dir/$icon_path"
+    if jq -e '.icons.dark' "${marketplace_file}" > /dev/null; then
+      icon_path=$(jq -r '.icons.dark' "${marketplace_file}")
+      if [[ ! -f "${plugin_dir}/${icon_path}" ]]; then
+        log_warning "Dark icon not found: ${plugin_dir}/${icon_path}"
       fi
     fi
   fi
 
   # Validate screenshot paths if present
-  if jq -e '.screenshots' "$marketplace_file" > /dev/null 2>&1; then
+  if jq -e '.screenshots' "${marketplace_file}" > /dev/null 2>&1; then
     local count
-    count=$(jq '.screenshots | length' "$marketplace_file" 2>/dev/null || echo "0")
-    if [[ "$count" =~ ^[0-9]+$ ]] && [[ $count -gt 0 ]]; then
+    count=$(jq '.screenshots | length' "${marketplace_file}" 2>/dev/null || echo "0")
+    if [[ "${count}" =~ ^[0-9]+$ ]] && [[ ${count} -gt 0 ]]; then
       for i in $(seq 0 $((count - 1))); do
-        screenshot=$(jq -r ".screenshots[$i]" "$marketplace_file")
-        if [[ -n "$screenshot" ]] && [[ ! -f "$plugin_dir/$screenshot" ]]; then
-          log_warning "Screenshot not found: $plugin_dir/$screenshot"
+        screenshot=$(jq -r ".screenshots[${i}]" "${marketplace_file}")
+        if [[ -n "${screenshot}" ]] && [[ ! -f "${plugin_dir}/${screenshot}" ]]; then
+          log_warning "Screenshot not found: ${plugin_dir}/${screenshot}"
         fi
       done
     fi
