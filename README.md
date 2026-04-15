@@ -40,10 +40,12 @@ Template repository for bootstrapping high-quality plugins for **Claude Code**, 
 3.  **Generate platform-specific manifests**:
     ```bash
     make generate-manifests
+    make generate-marketplace
     ```
-4.  **Validate manifests**:
+4.  **Validate configurations**:
     ```bash
     make validate-manifests
+    make validate-marketplace
     ```
 5.  **Run local checks**:
     ```bash
@@ -55,24 +57,31 @@ Template repository for bootstrapping high-quality plugins for **Claude Code**, 
 
 This template supports developing plugins for three platforms simultaneously:
 
-| Platform | Manifest | Status |
-|----------|----------|--------|
-| **Claude Code** | `.claude-plugin/plugin.json` | ✅ Full support |
-| **Cursor** | `.cursor-plugin/plugin.json` | ✅ Full support |
-| **OpenAI Codex** | `.codex-plugin/plugin.json` | ✅ Full support |
+| Platform | Manifest | Marketplace | Status |
+|----------|----------|-------------|--------|
+| **Claude Code** | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | ✅ Full support |
+| **Cursor** | `.cursor-plugin/plugin.json` | `.cursor-plugin/marketplace.json` | ✅ Full support |
+| **OpenAI Codex** | `.codex-plugin/plugin.json` | `.codex-plugin/marketplace.json` | ✅ Full support |
 
 ### Getting Started with Multi-Platform
 
 1. Create your plugin with a **unified configuration** in `plugin-config.json`
-2. Run `make generate-manifests` to create platform-specific manifest files
-3. Test on each platform using their respective CLIs
-4. Publish to each platform's marketplace independently
+2. Run `make generate-manifests` to create platform-specific plugin manifests
+3. Run `make generate-marketplace` to create marketplace configurations
+4. Test on each platform using their respective CLIs
+5. Deploy to each platform's marketplace
 
 See [**MULTI_PLATFORM_GUIDE.md**](./docs/MULTI_PLATFORM_GUIDE.md) for detailed instructions on:
 - Plugin configuration format
 - Cross-platform component compatibility
 - Platform-specific limitations and workarounds
 - Best practices for multi-platform development
+
+See [**MARKETPLACE_DEPLOYMENT_GUIDE.md**](./docs/MARKETPLACE_DEPLOYMENT_GUIDE.md) for:
+- Marketplace metadata configuration
+- Asset management (icons, screenshots)
+- Step-by-step submission to each marketplace
+- Publishing best practices
 
 ## Development
 

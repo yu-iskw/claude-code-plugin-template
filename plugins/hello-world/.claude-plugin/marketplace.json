@@ -1,0 +1,21 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "Comprehensive sample plugin demonstrating all Claude Code, Cursor, and Codex extension points.",
+  "author": {
+    "name": "yu-iskw",
+    "url": "https://github.com/yu-iskw"
+  },
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yu-iskw/claude-code-plugin-template",
+  "enabled": true,
+  "tags": [
+    "development",
+    "examples",
+    "tutorial"
+  ],
+  "categories": [
+    "development",
+    "learning"
+  ]
+}

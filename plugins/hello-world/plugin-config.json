@@ -45,5 +45,28 @@
       "enabled": true,
       "path": "./.lsp.json"
     }
+  },
+
+  "marketplace": {
+    "claude": {
+      "enabled": true,
+      "tags": ["development", "examples", "tutorial"],
+      "categories": ["development", "learning"],
+      "author": {
+        "name": "yu-iskw",
+        "url": "https://github.com/yu-iskw"
+      }
+    },
+    "cursor": {
+      "enabled": true,
+      "tags": ["development", "examples", "tutorial"],
+      "categories": ["development"]
+    },
+    "codex": {
+      "enabled": true,
+      "tags": ["development", "examples"],
+      "keywords": ["tutorial", "learning", "example"],
+      "pricing": "free"
+    }
   }
 }

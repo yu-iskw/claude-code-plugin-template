@@ -321,8 +321,64 @@ A: Check that Codex plugin manifest includes `"skills": "./skills/"` field.
 **Q: Generated manifests are missing fields**
 A: Verify `plugin-config.json` is valid and `generate-manifests.sh` ran successfully.
 
+## Marketplace Deployment
+
+Once your plugins are developed and tested, you can deploy them to each platform's marketplace.
+
+### Marketplace Workflow
+
+1. **Add marketplace metadata** to your `plugin-config.json`:
+   ```json
+   {
+     "marketplace": {
+       "claude": {"enabled": true, "tags": ["dev-tools"]},
+       "cursor": {"enabled": true, "tags": ["dev-tools"]},
+       "codex": {"enabled": true, "tags": ["dev-tools"]}
+     }
+   }
+   ```
+
+2. **Generate marketplace configurations**:
+   ```bash
+   make generate-marketplace
+   ```
+
+3. **Validate marketplace configs**:
+   ```bash
+   make validate-marketplace
+   ```
+
+4. **Submit to marketplaces**:
+   - Follow the submission instructions for each platform
+   - Each marketplace has its own review process (2-14 days typical)
+   - Users can then discover and install your plugin
+
+See [**MARKETPLACE_DEPLOYMENT_GUIDE.md**](./MARKETPLACE_DEPLOYMENT_GUIDE.md) for complete marketplace instructions.
+
+### Marketplace Configuration
+
+Marketplaces support these metadata fields:
+
+| Field | Claude | Cursor | Codex |
+|-------|--------|--------|-------|
+| Tags | ✅ | ✅ | ✅ |
+| Icons | ✅ Light/Dark | ✅ Light/Dark | ✅ Default |
+| Screenshots | ✅ | ❌ | ❌ |
+| Categories | ✅ | ✅ | ❌ |
+| Privacy Policy | ✅ | ❌ | ❌ |
+| Terms of Service | ✅ | ❌ | ❌ |
+
+### Asset Requirements
+
+- **Icons**: 256x256px PNG with transparency
+  - Claude Code & Cursor: Provide light and dark variants
+  - Codex: Single icon
+  
+- **Screenshots**: 1280x720px PNG/JPG (Claude Code only)
+
 ## Resources
 
 - [Claude Code Plugins](https://code.claude.com/docs/en/plugins-reference)
 - [Cursor Plugins](https://cursor.com/docs/plugins)
 - [Codex Plugins](https://developers.openai.com/codex/plugins/build)
+- [MARKETPLACE_DEPLOYMENT_GUIDE.md](./MARKETPLACE_DEPLOYMENT_GUIDE.md) - Complete marketplace submission guide

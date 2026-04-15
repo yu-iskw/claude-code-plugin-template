@@ -28,6 +28,14 @@ generate-manifests:
 validate-manifests:
 	./scripts/validate-manifests.sh
 
+.PHONY: generate-marketplace
+generate-marketplace:
+	./scripts/generate-marketplace-configs.sh
+
+.PHONY: validate-marketplace
+validate-marketplace:
+	./scripts/validate-marketplace-configs.sh
+
 .PHONY: test-integration-docker
 test-integration-docker:
 	docker build -f integration_tests/Dockerfile -t claude-plugin-template-smoke .
