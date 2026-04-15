@@ -144,6 +144,16 @@ for plugin in "${PLUGINS[@]}"; do
 		# Test 3: Component discovery
 		run_test_nonfatal "Component discovery" "test-component-discovery.sh" "${plugin}"
 	fi
+
+	# Test 4: Cursor manifest validation (optional — only if .cursor-plugin exists)
+	if [[ -d "${plugin}/.cursor-plugin" ]]; then
+		run_test_nonfatal "Cursor manifest validation" "validate-cursor-manifest.sh" "${plugin}"
+	fi
+
+	# Test 5: Codex manifest validation (optional — only if .codex-plugin exists)
+	if [[ -d "${plugin}/.codex-plugin" ]]; then
+		run_test_nonfatal "Codex manifest validation" "validate-codex-manifest.sh" "${plugin}"
+	fi
 done
 
 # Summary

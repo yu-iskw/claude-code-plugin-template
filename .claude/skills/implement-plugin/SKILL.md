@@ -31,12 +31,32 @@ Implement plugin-level packaging, manifest wiring, structure checks, runtime loa
 - Complete manifest template: `assets/templates/complete-plugin.json`
 - Manifest with components template: `assets/templates/plugin-with-components.json`
 
+## Multi-Platform Support
+
+A plugin directory can target multiple AI coding assistant platforms simultaneously. Add platform-specific manifest subdirectories alongside `.claude-plugin/`:
+
+| Platform    | Manifest Dir      | Required Fields                  | Platform Skill                        |
+| ----------- | ----------------- | -------------------------------- | ------------------------------------- |
+| Claude Code | `.claude-plugin/` | `name`, `version`, `description` | _(this skill)_                        |
+| Cursor      | `.cursor-plugin/` | `name`                           | `../implement-cursor-plugin/SKILL.md` |
+| Codex       | `.codex-plugin/`  | `name`, `version`, `description` | `../implement-codex-plugin/SKILL.md`  |
+
+Shared components (`skills/`, `.mcp.json`) live at the plugin root and are reused across all platforms that support them.
+
+Validate all platforms at once:
+
+```bash
+./integration_tests/run.sh --manifest-only --verbose
+```
+
 ## Component Skills
 
 - Hooks: `../implement-hooks/SKILL.md`
 - Agent Skills: `../implement-agent-skills/SKILL.md`
 - Sub-Agents: `../implement-sub-agents/SKILL.md`
 - Agent Teams: `../implement-agent-teams/SKILL.md`
+- Cursor plugins: `../implement-cursor-plugin/SKILL.md`
+- Codex plugins: `../implement-codex-plugin/SKILL.md`
 - Umbrella selection guide: `../implement-claude-extensions/SKILL.md`
 
 ## Sources
