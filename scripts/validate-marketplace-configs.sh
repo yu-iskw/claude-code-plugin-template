@@ -148,14 +148,17 @@ validate_claude_marketplace() {
   fi
 
   # Validate screenshot paths if present
-  if jq -e '.screenshots' "$marketplace_file" > /dev/null; then
-    local count=$(jq '.screenshots | length' "$marketplace_file")
-    for i in $(seq 0 $((count - 1))); do
-      screenshot=$(jq -r ".screenshots[$i]" "$marketplace_file")
-      if [[ ! -f "$plugin_dir/$screenshot" ]]; then
-        log_warning "Screenshot not found: $plugin_dir/$screenshot"
-      fi
-    done
+  if jq -e '.screenshots' "$marketplace_file" > /dev/null 2>&1; then
+    local count
+    count=$(jq '.screenshots | length' "$marketplace_file" 2>/dev/null || echo "0")
+    if [[ "$count" =~ ^[0-9]+$ ]] && [[ $count -gt 0 ]]; then
+      for i in $(seq 0 $((count - 1))); do
+        screenshot=$(jq -r ".screenshots[$i]" "$marketplace_file")
+        if [[ -n "$screenshot" ]] && [[ ! -f "$plugin_dir/$screenshot" ]]; then
+          log_warning "Screenshot not found: $plugin_dir/$screenshot"
+        fi
+      done
+    fi
   fi
 
   if [[ $has_error -eq 0 ]]; then
