@@ -1,0 +1,11 @@
+{
+  "name": "claude-code-plugin-template",
+  "version": "1.0.0",
+  "description": "Multi-platform plugin template for Claude Code, Cursor, and OpenAI Codex",
+  "author": {
+    "name": "yu-iskw"
+  },
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yu-iskw/claude-code-plugin-template",
+  "homepage": "https://github.com/yu-iskw/claude-code-plugin-template"
+}
