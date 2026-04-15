@@ -20,6 +20,11 @@ lint:
     - prettier@3.8.1
     - trivy@0.58.2
     - yamllint@1.38.0
+  ignore:
+    - linters: [prettier]
+      paths:
+        - "**/*.mdc"
+        - "**/*.svg"
   disabled:
     - checkov
     - trufflehog
