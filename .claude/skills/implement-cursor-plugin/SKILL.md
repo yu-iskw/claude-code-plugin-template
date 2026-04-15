@@ -49,11 +49,13 @@ plugins/<plugin-name>/
 ## Rules (.mdc files)
 
 Rules provide persistent AI guidance injected into every Cursor session. Use them for:
+
 - Coding standards and conventions
 - Project-specific patterns to follow or avoid
 - Context about the codebase architecture
 
 **Frontmatter fields**:
+
 ```markdown
 ---
 description: Brief description of what this rule enforces
@@ -77,6 +79,7 @@ alwaysApply: false
 ## Validation
 
 Run before distribution:
+
 ```bash
 bash integration_tests/validate-cursor-manifest.sh plugins/<plugin-name>
 ```

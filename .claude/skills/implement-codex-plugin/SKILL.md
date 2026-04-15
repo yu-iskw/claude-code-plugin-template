@@ -53,6 +53,7 @@ plugins/<plugin-name>/
 Codex skills follow the same `SKILL.md` format as Claude Code skills. They live in the shared `skills/` directory and are automatically picked up by all platforms that support them.
 
 Frontmatter:
+
 ```markdown
 ---
 name: skill-name
@@ -63,6 +64,7 @@ description: What this skill does
 ## App Integrations (.app.json)
 
 Connect the plugin to third-party services:
+
 ```json
 {
   "integrations": [
@@ -78,6 +80,7 @@ Connect the plugin to third-party services:
 ## Marketplace Assets
 
 Place in `assets/`:
+
 - `icon.svg` or `icon.png` — Plugin icon (64×64 recommended)
 - `screenshot-*.png` — Up to 3 screenshots for the marketplace listing
 - `banner.png` — Optional banner image
@@ -90,6 +93,7 @@ Place in `assets/`:
 ## Validation
 
 Run before distribution:
+
 ```bash
 bash integration_tests/validate-codex-manifest.sh plugins/<plugin-name>
 ```
