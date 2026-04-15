@@ -25,6 +25,7 @@ lint:
       paths:
         - "**/*.mdc"
         - "**/*.svg"
+        - .prettierignore
   disabled:
     - checkov
     - trufflehog
