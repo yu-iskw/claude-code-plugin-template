@@ -33,7 +33,7 @@ Implement Cursor plugin packaging: manifest authoring, rules creation, skill reu
 
 ## Directory Layout
 
-```
+```text
 plugins/<plugin-name>/
 ├── .cursor-plugin/
 │   └── plugin.json          # Cursor manifest (required)

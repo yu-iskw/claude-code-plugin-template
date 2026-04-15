@@ -35,7 +35,7 @@ Implement Codex plugin packaging: manifest authoring, skill reuse, app integrati
 
 ## Directory Layout
 
-```
+```text
 plugins/<plugin-name>/
 ├── .codex-plugin/
 │   └── plugin.json          # Codex manifest (required)
