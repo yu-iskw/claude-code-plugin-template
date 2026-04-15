@@ -5,7 +5,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+REPO_ROOT="$(dirname "${SCRIPT_DIR}")"
 PLATFORM=""
 PLUGIN_DIR=""
 
@@ -74,9 +74,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate platform if specified
-if [[ -n "$PLATFORM" ]]; then
-  if ! [[ "$PLATFORM" =~ ^(claude|cursor|codex)$ ]]; then
-    log_error "Invalid platform: $PLATFORM (must be claude, cursor, or codex)"
+if [[ -n "${PLATFORM}" ]]; then
+  if ! [[ "${PLATFORM}" =~ ^(claude|cursor|codex)$ ]]; then
+    log_error "Invalid platform: ${PLATFORM} (must be claude, cursor, or codex)"
     exit 1
   fi
 fi
@@ -88,17 +88,17 @@ if ! command -v jq &> /dev/null; then
 fi
 
 # Find plugin directories
-if [[ -n "$PLUGIN_DIR" ]]; then
-  if [[ ! -d "$PLUGIN_DIR" ]]; then
-    log_error "Plugin directory not found: $PLUGIN_DIR"
+if [[ -n "${PLUGIN_DIR}" ]]; then
+  if [[ ! -d "${PLUGIN_DIR}" ]]; then
+    log_error "Plugin directory not found: ${PLUGIN_DIR}"
     exit 1
   fi
-  PLUGINS=("$PLUGIN_DIR")
+  PLUGINS=("${PLUGIN_DIR}")
 else
   PLUGINS=()
   while IFS= read -r -d '' dir; do
-    PLUGINS+=("$dir")
-  done < <(find "$REPO_ROOT/plugins" -maxdepth 1 -type d -mindepth 1 -print0)
+    PLUGINS+=("${dir}")
+  done < <(find "${REPO_ROOT}/plugins" -maxdepth 1 -type d -mindepth 1 -print0)
 fi
 
 if [[ ${#PLUGINS[@]} -eq 0 ]]; then
@@ -108,48 +108,48 @@ fi
 
 # Process each plugin
 for plugin_dir in "${PLUGINS[@]}"; do
-  plugin_name="$(basename "$plugin_dir")"
-  config_file="$plugin_dir/plugin-config.json"
+  plugin_name="$(basename "${plugin_dir}")"
+  config_file="${plugin_dir}/plugin-config.json"
 
-  if [[ ! -f "$config_file" ]]; then
-    log_info "Skipping $plugin_name (no plugin-config.json)"
+  if [[ ! -f "${config_file}" ]]; then
+    log_info "Skipping ${plugin_name} (no plugin-config.json)"
     continue
   fi
 
-  log_info "Processing marketplace configs for: $plugin_name"
+  log_info "Processing marketplace configs for: ${plugin_name}"
 
   # Validate JSON
-  if ! jq empty "$config_file" 2>/dev/null; then
-    log_error "$plugin_name: Invalid JSON in plugin-config.json"
+  if ! jq empty "${config_file}" 2>/dev/null; then
+    log_error "${plugin_name}: Invalid JSON in plugin-config.json"
     continue
   fi
 
   # Extract base metadata
-  NAME=$(jq -r '.name' "$config_file")
-  VERSION=$(jq -r '.version // "1.0.0"' "$config_file")
-  DESCRIPTION=$(jq -r '.description // ""' "$config_file")
-  AUTHOR=$(jq -r '.author // {}' "$config_file")
-  LICENSE=$(jq -r '.license // ""' "$config_file")
-  REPOSITORY=$(jq -r '.repository // ""' "$config_file")
-  HOMEPAGE=$(jq -r '.homepage // ""' "$config_file")
+  NAME=$(jq -r '.name' "${config_file}")
+  VERSION=$(jq -r '.version // "1.0.0"' "${config_file}")
+  DESCRIPTION=$(jq -r '.description // ""' "${config_file}")
+  AUTHOR=$(jq -r '.author // {}' "${config_file}")
+  LICENSE=$(jq -r '.license // ""' "${config_file}")
+  REPOSITORY=$(jq -r '.repository // ""' "${config_file}")
+  HOMEPAGE=$(jq -r '.homepage // ""' "${config_file}")
 
   # Generate Claude Code marketplace config
-  if [[ -z "$PLATFORM" ]] || [[ "$PLATFORM" == "claude" ]]; then
-    if jq -e '.platforms.claude.enabled // false' "$config_file" > /dev/null; then
-      CLAUDE_MARKET_DIR="$plugin_dir/.claude-plugin"
+  if [[ -z "${PLATFORM}" ]] || [[ "${PLATFORM}" == "claude" ]]; then
+    if jq -e '.platforms.claude.enabled // false' "${config_file}" > /dev/null; then
+      CLAUDE_MARKET_DIR="${plugin_dir}/.claude-plugin"
       mkdir -p "$CLAUDE_MARKET_DIR"
 
       # Extract marketplace metadata
-      MARKETPLACE=$(jq -r '.marketplace.claude // {}' "$config_file")
+      MARKETPLACE=$(jq -r '.marketplace.claude // {}' "${config_file}")
 
       CLAUDE_MARKET=$(jq -n \
-        --arg name "$NAME" \
-        --arg version "$VERSION" \
-        --arg desc "$DESCRIPTION" \
-        --argjson author "$AUTHOR" \
-        --arg license "$LICENSE" \
-        --arg repo "$REPOSITORY" \
-        --argjson market "$MARKETPLACE" \
+        --arg name "${NAME}" \
+        --arg version "${VERSION}" \
+        --arg desc "${DESCRIPTION}" \
+        --argjson author "${AUTHOR}" \
+        --arg license "${LICENSE}" \
+        --arg repo "${REPOSITORY}" \
+        --argjson market "${MARKETPLACE}" \
         '{
           name: $name,
           version: $version,
@@ -165,20 +165,20 @@ for plugin_dir in "${PLUGINS[@]}"; do
   fi
 
   # Generate Cursor marketplace config
-  if [[ -z "$PLATFORM" ]] || [[ "$PLATFORM" == "cursor" ]]; then
-    if jq -e '.platforms.cursor.enabled // false' "$config_file" > /dev/null; then
-      CURSOR_MARKET_DIR="$plugin_dir/.cursor-plugin"
+  if [[ -z "${PLATFORM}" ]] || [[ "${PLATFORM}" == "cursor" ]]; then
+    if jq -e '.platforms.cursor.enabled // false' "${config_file}" > /dev/null; then
+      CURSOR_MARKET_DIR="${plugin_dir}/.cursor-plugin"
       mkdir -p "$CURSOR_MARKET_DIR"
 
       # Extract marketplace metadata
-      MARKETPLACE=$(jq -r '.marketplace.cursor // {}' "$config_file")
+      MARKETPLACE=$(jq -r '.marketplace.cursor // {}' "${config_file}")
 
       CURSOR_MARKET=$(jq -n \
-        --arg name "$NAME" \
-        --arg version "$VERSION" \
-        --arg desc "$DESCRIPTION" \
-        --argjson author "$AUTHOR" \
-        --argjson market "$MARKETPLACE" \
+        --arg name "${NAME}" \
+        --arg version "${VERSION}" \
+        --arg desc "${DESCRIPTION}" \
+        --argjson author "${AUTHOR}" \
+        --argjson market "${MARKETPLACE}" \
         '{
           name: $name,
           version: $version,
@@ -187,12 +187,12 @@ for plugin_dir in "${PLUGINS[@]}"; do
         } + ($market | if type == "object" then . else {} end)')
 
       # Add optional fields
-      if [[ -n "$LICENSE" ]] && [[ "$LICENSE" != "null" ]]; then
-        CURSOR_MARKET=$(echo "$CURSOR_MARKET" | jq --arg license "$LICENSE" '. + {license: $license}')
+      if [[ -n "${LICENSE}" ]] && [[ "${LICENSE}" != "null" ]]; then
+        CURSOR_MARKET=$(echo "$CURSOR_MARKET" | jq --arg license "${LICENSE}" '. + {license: $license}')
       fi
 
-      if [[ -n "$REPOSITORY" ]] && [[ "$REPOSITORY" != "null" ]]; then
-        CURSOR_MARKET=$(echo "$CURSOR_MARKET" | jq --arg repo "$REPOSITORY" '. + {repository: $repo}')
+      if [[ -n "${REPOSITORY}" ]] && [[ "${REPOSITORY}" != "null" ]]; then
+        CURSOR_MARKET=$(echo "$CURSOR_MARKET" | jq --arg repo "${REPOSITORY}" '. + {repository: $repo}')
       fi
 
       echo "$CURSOR_MARKET" | jq '.' > "$CURSOR_MARKET_DIR/marketplace.json"
@@ -201,19 +201,19 @@ for plugin_dir in "${PLUGINS[@]}"; do
   fi
 
   # Generate Codex marketplace config
-  if [[ -z "$PLATFORM" ]] || [[ "$PLATFORM" == "codex" ]]; then
-    if jq -e '.platforms.codex.enabled // false' "$config_file" > /dev/null; then
-      CODEX_MARKET_DIR="$plugin_dir/.codex-plugin"
+  if [[ -z "${PLATFORM}" ]] || [[ "${PLATFORM}" == "codex" ]]; then
+    if jq -e '.platforms.codex.enabled // false' "${config_file}" > /dev/null; then
+      CODEX_MARKET_DIR="${plugin_dir}/.codex-plugin"
       mkdir -p "$CODEX_MARKET_DIR"
 
       # Extract marketplace metadata
-      MARKETPLACE=$(jq -r '.marketplace.codex // {}' "$config_file")
+      MARKETPLACE=$(jq -r '.marketplace.codex // {}' "${config_file}")
 
       CODEX_MARKET=$(jq -n \
-        --arg name "$NAME" \
-        --arg version "$VERSION" \
-        --arg desc "$DESCRIPTION" \
-        --argjson market "$MARKETPLACE" \
+        --arg name "${NAME}" \
+        --arg version "${VERSION}" \
+        --arg desc "${DESCRIPTION}" \
+        --argjson market "${MARKETPLACE}" \
         '{
           name: $name,
           version: $version,
@@ -221,12 +221,12 @@ for plugin_dir in "${PLUGINS[@]}"; do
         } + ($market | if type == "object" then . else {} end)')
 
       # Add optional fields
-      if [[ -n "$LICENSE" ]] && [[ "$LICENSE" != "null" ]]; then
-        CODEX_MARKET=$(echo "$CODEX_MARKET" | jq --arg license "$LICENSE" '. + {license: $license}')
+      if [[ -n "${LICENSE}" ]] && [[ "${LICENSE}" != "null" ]]; then
+        CODEX_MARKET=$(echo "$CODEX_MARKET" | jq --arg license "${LICENSE}" '. + {license: $license}')
       fi
 
-      if [[ -n "$REPOSITORY" ]] && [[ "$REPOSITORY" != "null" ]]; then
-        CODEX_MARKET=$(echo "$CODEX_MARKET" | jq --arg repo "$REPOSITORY" '. + {repository: $repo}')
+      if [[ -n "${REPOSITORY}" ]] && [[ "${REPOSITORY}" != "null" ]]; then
+        CODEX_MARKET=$(echo "$CODEX_MARKET" | jq --arg repo "${REPOSITORY}" '. + {repository: $repo}')
       fi
 
       echo "$CODEX_MARKET" | jq '.' > "$CODEX_MARKET_DIR/marketplace.json"

@@ -5,7 +5,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+REPO_ROOT="$(dirname "${SCRIPT_DIR}")"
 PLATFORM=""
 PLUGIN_DIR=""
 
@@ -76,9 +76,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate platform if specified
-if [[ -n "$PLATFORM" ]]; then
-  if ! [[ "$PLATFORM" =~ ^(claude|cursor|codex)$ ]]; then
-    log_error "Invalid platform: $PLATFORM (must be claude, cursor, or codex)"
+if [[ -n "${PLATFORM}" ]]; then
+  if ! [[ "${PLATFORM}" =~ ^(claude|cursor|codex)$ ]]; then
+    log_error "Invalid platform: ${PLATFORM} (must be claude, cursor, or codex)"
     exit 1
   fi
 fi
@@ -93,17 +93,17 @@ TOTAL_VALIDATED=0
 TOTAL_FAILED=0
 
 # Find plugin directories
-if [[ -n "$PLUGIN_DIR" ]]; then
-  if [[ ! -d "$PLUGIN_DIR" ]]; then
-    log_error "Plugin directory not found: $PLUGIN_DIR"
+if [[ -n "${PLUGIN_DIR}" ]]; then
+  if [[ ! -d "${PLUGIN_DIR}" ]]; then
+    log_error "Plugin directory not found: ${PLUGIN_DIR}"
     exit 1
   fi
-  PLUGINS=("$PLUGIN_DIR")
+  PLUGINS=("${PLUGIN_DIR}")
 else
   PLUGINS=()
   while IFS= read -r -d '' dir; do
-    PLUGINS+=("$dir")
-  done < <(find "$REPO_ROOT/plugins" -maxdepth 1 -type d -mindepth 1 -print0)
+    PLUGINS+=("${dir}")
+  done < <(find "${REPO_ROOT}/plugins" -maxdepth 1 -type d -mindepth 1 -print0)
 fi
 
 # Validate Claude Code marketplace config
@@ -112,21 +112,21 @@ validate_claude_marketplace() {
   local plugin_dir="$2"
   local has_error=0
 
-  if [[ ! -f "$marketplace_file" ]]; then
-    log_warning "Claude Code marketplace config not found: $marketplace_file"
+  if [[ ! -f "${marketplace_file}" ]]; then
+    log_warning "Claude Code marketplace config not found: ${marketplace_file}"
     return 0
   fi
 
   # Validate JSON
-  if ! jq empty "$marketplace_file" 2>/dev/null; then
-    log_error "Invalid JSON in Claude Code marketplace config: $marketplace_file"
+  if ! jq empty "${marketplace_file}" 2>/dev/null; then
+    log_error "Invalid JSON in Claude Code marketplace config: ${marketplace_file}"
     return 1
   fi
 
   # Check required fields
   for field in name version description; do
-    if ! jq -e ".$field" "$marketplace_file" > /dev/null; then
-      log_error "Missing required field '$field' in Claude Code marketplace config"
+    if ! jq -e ".${field}" "${marketplace_file}" > /dev/null; then
+      log_error "Missing required field '${field}' in Claude Code marketplace config"
       has_error=1
     fi
   done
@@ -161,7 +161,7 @@ validate_claude_marketplace() {
     fi
   fi
 
-  if [[ $has_error -eq 0 ]]; then
+  if [[ ${has_error} -eq 0 ]]; then
     log_success "Claude Code marketplace config valid"
     return 0
   else
@@ -175,42 +175,42 @@ validate_cursor_marketplace() {
   local plugin_dir="$2"
   local has_error=0
 
-  if [[ ! -f "$marketplace_file" ]]; then
-    log_warning "Cursor marketplace config not found: $marketplace_file"
+  if [[ ! -f "${marketplace_file}" ]]; then
+    log_warning "Cursor marketplace config not found: ${marketplace_file}"
     return 0
   fi
 
   # Validate JSON
-  if ! jq empty "$marketplace_file" 2>/dev/null; then
-    log_error "Invalid JSON in Cursor marketplace config: $marketplace_file"
+  if ! jq empty "${marketplace_file}" 2>/dev/null; then
+    log_error "Invalid JSON in Cursor marketplace config: ${marketplace_file}"
     return 1
   fi
 
   # Check required fields
   for field in name version description; do
-    if ! jq -e ".$field" "$marketplace_file" > /dev/null; then
-      log_error "Missing required field '$field' in Cursor marketplace config"
+    if ! jq -e ".${field}" "${marketplace_file}" > /dev/null; then
+      log_error "Missing required field '${field}' in Cursor marketplace config"
       has_error=1
     fi
   done
 
   # Validate icon paths if present
-  if jq -e '.icons' "$marketplace_file" > /dev/null; then
-    if jq -e '.icons.light' "$marketplace_file" > /dev/null; then
-      icon_path=$(jq -r '.icons.light' "$marketplace_file")
-      if [[ ! -f "$plugin_dir/$icon_path" ]]; then
-        log_warning "Light icon not found: $plugin_dir/$icon_path"
+  if jq -e '.icons' "${marketplace_file}" > /dev/null; then
+    if jq -e '.icons.light' "${marketplace_file}" > /dev/null; then
+      icon_path=$(jq -r '.icons.light' "${marketplace_file}")
+      if [[ ! -f "${plugin_dir}/${icon_path}" ]]; then
+        log_warning "Light icon not found: ${plugin_dir}/${icon_path}"
       fi
     fi
-    if jq -e '.icons.dark' "$marketplace_file" > /dev/null; then
-      icon_path=$(jq -r '.icons.dark' "$marketplace_file")
-      if [[ ! -f "$plugin_dir/$icon_path" ]]; then
-        log_warning "Dark icon not found: $plugin_dir/$icon_path"
+    if jq -e '.icons.dark' "${marketplace_file}" > /dev/null; then
+      icon_path=$(jq -r '.icons.dark' "${marketplace_file}")
+      if [[ ! -f "${plugin_dir}/${icon_path}" ]]; then
+        log_warning "Dark icon not found: ${plugin_dir}/${icon_path}"
       fi
     fi
   fi
 
-  if [[ $has_error -eq 0 ]]; then
+  if [[ ${has_error} -eq 0 ]]; then
     log_success "Cursor marketplace config valid"
     return 0
   else
@@ -224,36 +224,36 @@ validate_codex_marketplace() {
   local plugin_dir="$2"
   local has_error=0
 
-  if [[ ! -f "$marketplace_file" ]]; then
-    log_warning "Codex marketplace config not found: $marketplace_file"
+  if [[ ! -f "${marketplace_file}" ]]; then
+    log_warning "Codex marketplace config not found: ${marketplace_file}"
     return 0
   fi
 
   # Validate JSON
-  if ! jq empty "$marketplace_file" 2>/dev/null; then
-    log_error "Invalid JSON in Codex marketplace config: $marketplace_file"
+  if ! jq empty "${marketplace_file}" 2>/dev/null; then
+    log_error "Invalid JSON in Codex marketplace config: ${marketplace_file}"
     return 1
   fi
 
   # Check required fields
   for field in name version description; do
-    if ! jq -e ".$field" "$marketplace_file" > /dev/null; then
-      log_error "Missing required field '$field' in Codex marketplace config"
+    if ! jq -e ".${field}" "${marketplace_file}" > /dev/null; then
+      log_error "Missing required field '${field}' in Codex marketplace config"
       has_error=1
     fi
   done
 
   # Validate icon paths if present
-  if jq -e '.icons' "$marketplace_file" > /dev/null; then
-    if jq -e '.icons.default' "$marketplace_file" > /dev/null; then
-      icon_path=$(jq -r '.icons.default' "$marketplace_file")
-      if [[ ! -f "$plugin_dir/$icon_path" ]]; then
-        log_warning "Icon not found: $plugin_dir/$icon_path"
+  if jq -e '.icons' "${marketplace_file}" > /dev/null; then
+    if jq -e '.icons.default' "${marketplace_file}" > /dev/null; then
+      icon_path=$(jq -r '.icons.default' "${marketplace_file}")
+      if [[ ! -f "${plugin_dir}/${icon_path}" ]]; then
+        log_warning "Icon not found: ${plugin_dir}/${icon_path}"
       fi
     fi
   fi
 
-  if [[ $has_error -eq 0 ]]; then
+  if [[ ${has_error} -eq 0 ]]; then
     log_success "Codex marketplace config valid"
     return 0
   else
@@ -263,20 +263,20 @@ validate_codex_marketplace() {
 
 # Process each plugin
 for plugin_dir in "${PLUGINS[@]}"; do
-  plugin_name="$(basename "$plugin_dir")"
+  plugin_name="$(basename "${plugin_dir}")"
   echo ""
-  log_info "Validating marketplace configs for: $plugin_name"
+  log_info "Validating marketplace configs for: ${plugin_name}"
 
   # Check for config file
-  if [[ ! -f "$plugin_dir/plugin-config.json" ]]; then
+  if [[ ! -f "${plugin_dir}/plugin-config.json" ]]; then
     log_warning "No plugin-config.json found, skipping validation"
     continue
   fi
 
   # Validate Claude Code
-  if [[ -z "$PLATFORM" ]] || [[ "$PLATFORM" == "claude" ]]; then
+  if [[ -z "${PLATFORM}" ]] || [[ "${PLATFORM}" == "claude" ]]; then
     echo "  Claude Code:"
-    if validate_claude_marketplace "$plugin_dir/.claude-plugin/marketplace.json" "$plugin_dir"; then
+    if validate_claude_marketplace "${plugin_dir}/.claude-plugin/marketplace.json" "${plugin_dir}"; then
       ((TOTAL_VALIDATED++)) || true
     else
       ((TOTAL_FAILED++)) || true
@@ -284,9 +284,9 @@ for plugin_dir in "${PLUGINS[@]}"; do
   fi
 
   # Validate Cursor
-  if [[ -z "$PLATFORM" ]] || [[ "$PLATFORM" == "cursor" ]]; then
+  if [[ -z "${PLATFORM}" ]] || [[ "${PLATFORM}" == "cursor" ]]; then
     echo "  Cursor:"
-    if validate_cursor_marketplace "$plugin_dir/.cursor-plugin/marketplace.json" "$plugin_dir"; then
+    if validate_cursor_marketplace "${plugin_dir}/.cursor-plugin/marketplace.json" "${plugin_dir}"; then
       ((TOTAL_VALIDATED++)) || true
     else
       ((TOTAL_FAILED++)) || true
@@ -294,9 +294,9 @@ for plugin_dir in "${PLUGINS[@]}"; do
   fi
 
   # Validate Codex
-  if [[ -z "$PLATFORM" ]] || [[ "$PLATFORM" == "codex" ]]; then
+  if [[ -z "${PLATFORM}" ]] || [[ "${PLATFORM}" == "codex" ]]; then
     echo "  Codex:"
-    if validate_codex_marketplace "$plugin_dir/.codex-plugin/marketplace.json" "$plugin_dir"; then
+    if validate_codex_marketplace "${plugin_dir}/.codex-plugin/marketplace.json" "${plugin_dir}"; then
       ((TOTAL_VALIDATED++)) || true
     else
       ((TOTAL_FAILED++)) || true
@@ -305,9 +305,9 @@ for plugin_dir in "${PLUGINS[@]}"; do
 done
 
 echo ""
-log_info "Validation Summary: $TOTAL_VALIDATED validated, $TOTAL_FAILED failed"
+log_info "Validation Summary: ${TOTAL_VALIDATED} validated, ${TOTAL_FAILED} failed"
 
-if [[ $TOTAL_FAILED -gt 0 ]]; then
+if [[ ${TOTAL_FAILED} -gt 0 ]]; then
   exit 1
 fi
 
