@@ -20,6 +20,14 @@ lint:
 format:
 	trunk fmt --all
 
+.PHONY: generate-manifests
+generate-manifests:
+	./scripts/generate-manifests.sh
+
+.PHONY: validate-manifests
+validate-manifests:
+	./scripts/validate-manifests.sh
+
 .PHONY: test-integration-docker
 test-integration-docker:
 	docker build -f integration_tests/Dockerfile -t claude-plugin-template-smoke .

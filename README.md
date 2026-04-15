@@ -1,14 +1,16 @@
-# Claude Plugin Monorepo Template
+# Multi-Platform AI Plugin Monorepo Template
 
-Template repository for bootstrapping high-quality Claude Code plugins with shared CI/CD and testing infrastructure.
+Template repository for bootstrapping high-quality plugins for **Claude Code**, **Cursor**, and **OpenAI Codex** with shared CI/CD and testing infrastructure.
 
 ## Key Features
 
+- **Multi-Platform Support**: Build plugins once, deploy to Claude Code, Cursor, and Codex with platform-specific manifest generation.
 - **Standard Plugin Layout**: Follows best practices for Skills, Agents, Hooks, MCP, and LSP.
 - **Monorepo Ready**: Designed to host multiple plugins under the `plugins/` directory.
-- **Comprehensive Examples**: The `hello-world` plugin demonstrates every available extension point.
+- **Comprehensive Examples**: The `hello-world` plugin demonstrates every available extension point across all platforms.
 - **Shared CI/CD**: Unified quality checks via `trunk` and GitHub Actions.
 - **Integration Tests**: Automated smoke tests that validate manifest schemas, component discovery, and **plugin installation** (marketplace add + install + list/validate) across all plugins.
+- **Build-Time Manifest Generation**: Generate platform-specific `plugin.json` manifests from a single `plugin-config.json` source file.
 
 ## Repository Layout
 
@@ -35,11 +37,42 @@ Template repository for bootstrapping high-quality Claude Code plugins with shar
 
 1.  **Create a new repository** from this template.
 2.  **Explore the sample plugin** in `plugins/hello-world/` to see how components are defined.
-3.  **Run local checks**:
+3.  **Generate platform-specific manifests**:
+    ```bash
+    make generate-manifests
+    ```
+4.  **Validate manifests**:
+    ```bash
+    make validate-manifests
+    ```
+5.  **Run local checks**:
     ```bash
     make lint
     make test-integration-docker
     ```
+
+## Multi-Platform Development
+
+This template supports developing plugins for three platforms simultaneously:
+
+| Platform | Manifest | Status |
+|----------|----------|--------|
+| **Claude Code** | `.claude-plugin/plugin.json` | ✅ Full support |
+| **Cursor** | `.cursor-plugin/plugin.json` | ✅ Full support |
+| **OpenAI Codex** | `.codex-plugin/plugin.json` | ✅ Full support |
+
+### Getting Started with Multi-Platform
+
+1. Create your plugin with a **unified configuration** in `plugin-config.json`
+2. Run `make generate-manifests` to create platform-specific manifest files
+3. Test on each platform using their respective CLIs
+4. Publish to each platform's marketplace independently
+
+See [**MULTI_PLATFORM_GUIDE.md**](./docs/MULTI_PLATFORM_GUIDE.md) for detailed instructions on:
+- Plugin configuration format
+- Cross-platform component compatibility
+- Platform-specific limitations and workarounds
+- Best practices for multi-platform development
 
 ## Development
 
