@@ -30,6 +30,20 @@ jobs:
       - name: Run all plugin integration tests
         run: ./integration_tests/run.sh --verbose
 
+  multi-platform-validation:
+    name: Multi-Platform Manifest Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Run multi-platform manifest validation
+        run: ./integration_tests/run.sh --manifest-only --verbose
+
   plugin-install-docker:
     name: Plugin Install in Docker
     runs-on: ubuntu-latest

@@ -22,13 +22,15 @@ See `references/decision-framework.md` for detailed scoring guide.
 
 ## Comparison
 
-| Extension Type | Best For                           | Primary Artifacts                | Component Skill                      |
-| -------------- | ---------------------------------- | -------------------------------- | ------------------------------------ |
-| Hooks          | Event-driven automation/guardrails | `hooks/hooks.json`, hook scripts | `../implement-hooks/SKILL.md`        |
-| Agent Skills   | Reusable task playbooks            | `skills/<name>/SKILL.md`         | `../implement-agent-skills/SKILL.md` |
-| Sub-Agents     | Specialized delegated roles        | `agents/*.md`                    | `../implement-sub-agents/SKILL.md`   |
-| Agent Teams    | Coordinated multi-agent execution  | team config + coordination docs  | `../implement-agent-teams/SKILL.md`  |
-| Plugins        | Packaging/distribution + wiring    | `.claude-plugin/plugin.json`     | `../implement-plugin/SKILL.md`       |
+| Extension Type      | Best For                           | Primary Artifacts                   | Component Skill                             |
+| ------------------- | ---------------------------------- | ----------------------------------- | ------------------------------------------- |
+| Hooks               | Event-driven automation/guardrails | `hooks/hooks.json`, hook scripts    | `../implement-hooks/SKILL.md`               |
+| Agent Skills        | Reusable task playbooks            | `skills/<name>/SKILL.md`            | `../implement-agent-skills/SKILL.md`        |
+| Sub-Agents          | Specialized delegated roles        | `agents/*.md`                       | `../implement-sub-agents/SKILL.md`          |
+| Agent Teams         | Coordinated multi-agent execution  | team config + coordination docs     | `../implement-agent-teams/SKILL.md`         |
+| Plugins (Claude)    | Packaging/distribution + wiring    | `.claude-plugin/plugin.json`        | `../implement-plugin/SKILL.md`              |
+| Plugins (Cursor)    | Cursor marketplace delivery        | `.cursor-plugin/plugin.json`, rules | `../implement-cursor-plugin/SKILL.md`       |
+| Plugins (Codex)     | Codex marketplace delivery         | `.codex-plugin/plugin.json`, assets | `../implement-codex-plugin/SKILL.md`        |
 
 ## Workflow
 
@@ -62,6 +64,8 @@ See `references/decision-framework.md` for detailed scoring guide.
 - `../implement-sub-agents/SKILL.md`
 - `../implement-agent-teams/SKILL.md`
 - `../implement-plugin/SKILL.md`
+- `../implement-cursor-plugin/SKILL.md`
+- `../implement-codex-plugin/SKILL.md`
 
 ## Sources
 
