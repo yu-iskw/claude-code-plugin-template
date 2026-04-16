@@ -4,7 +4,7 @@ WORKDIR /workspace
 
 # Install shell/runtime dependencies and Claude Code CLI
 RUN apk add --no-cache bash jq && \
-    npm install -g @anthropic-ai/claude-code
+    npm install -g @anthropic-ai/claude-code@2.1.110
 
 # Copy plugin structure and marketplace manifest (for install test at runtime)
 COPY plugins/ plugins/
