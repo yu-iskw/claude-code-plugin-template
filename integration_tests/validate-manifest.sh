@@ -14,73 +14,76 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Validate plugin manifest JSON schema and required fields
 set -euo pipefail
 
-# Default plugin directory
 PLUGIN_DIR="${1:-.}"
-MANIFEST_PATH="${PLUGIN_DIR}/.claude-plugin/plugin.json"
+MANIFEST_PATH="${PLUGIN_DIR}/plugin.json"
+EXPECTED_SCHEMA="https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
 
-# Check if manifest file exists
 if [[ ! -f ${MANIFEST_PATH} ]]; then
-	echo "ERROR: Manifest file not found: ${MANIFEST_PATH}"
-	exit 1
+  echo "ERROR: Agent Plugins manifest not found: ${MANIFEST_PATH}"
+  exit 1
 fi
 
-# Detect available JSON validator (prefer jq, fallback to node)
-if command -v jq >/dev/null 2>&1; then
-	# Validate JSON structure
-	if ! jq -e . "${MANIFEST_PATH}" >/dev/null 2>&1; then
-		echo "ERROR: Invalid JSON structure in ${MANIFEST_PATH}."
-		exit 1
-	fi
-
-	# Check required fields
-	for field in name version description; do
-		if ! jq -e --arg field "${field}" '.[$field] | type == "string" and length > 0' "${MANIFEST_PATH}" >/dev/null 2>&1; then
-			echo "ERROR: Missing required non-empty string field '${field}' in ${MANIFEST_PATH}."
-			exit 1
-		fi
-	done
-
-	# Validate plugin name format (kebab-case)
-	plugin_name="$(jq -r '.name' "${MANIFEST_PATH}")"
-	if ! jq -e '.name | test("^[a-z0-9-]+$")' "${MANIFEST_PATH}" >/dev/null 2>&1; then
-		echo "ERROR: Invalid plugin name '${plugin_name}'. Name must match ^[a-z0-9-]+$ (kebab-case)."
-		exit 1
-	fi
-
-	echo "Manifest validation passed for plugin: ${plugin_name}"
-elif command -v node >/dev/null 2>&1; then
-	# Fallback to node for JSON validation
-	node - "${MANIFEST_PATH}" <<'EOF'
+node - "${MANIFEST_PATH}" "${EXPECTED_SCHEMA}" <<'EOF'
 const fs = require("fs");
-const manifestPath = process.argv[2];
+const [manifestPath, expectedSchema] = process.argv.slice(2);
+const allowed = new Set([
+  "$schema", "name", "version", "description", "author", "homepage",
+  "repository", "license", "keywords", "extensions"
+]);
 let manifest;
-
 try {
   manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 } catch (error) {
-  console.error(`ERROR: Invalid JSON structure in ${manifestPath}: ${error.message}`);
+  console.error(`ERROR: Invalid JSON in ${manifestPath}: ${error.message}`);
   process.exit(1);
 }
-
-const requiredFields = ["name", "version", "description"];
-for (const field of requiredFields) {
-  if (typeof manifest[field] !== "string" || manifest[field].trim() === "") {
-    console.error(`ERROR: Missing required non-empty string field '${field}' in ${manifestPath}.`);
+if (!manifest || Array.isArray(manifest) || typeof manifest !== "object") {
+  console.error(`ERROR: ${manifestPath} must contain a JSON object.`);
+  process.exit(1);
+}
+if (manifest.$schema !== expectedSchema) {
+  console.error(`ERROR: $schema must equal ${expectedSchema}.`);
+  process.exit(1);
+}
+if (typeof manifest.name !== "string" || manifest.name.trim() === "") {
+  console.error("ERROR: name must be a non-empty string.");
+  process.exit(1);
+}
+if (!/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(manifest.name)) {
+  console.error(`ERROR: invalid plugin name: ${manifest.name}`);
+  process.exit(1);
+}
+for (const [key, value] of Object.entries(manifest)) {
+  if (!allowed.has(key)) {
+    console.error(`ERROR: unknown top-level field '${key}' in ${manifestPath}.`);
+    process.exit(1);
+  }
+  if (["version", "description", "homepage", "repository", "license"].includes(key) && typeof value !== "string") {
+    console.error(`ERROR: ${key} must be a string.`);
     process.exit(1);
   }
 }
-
-if (!/^[a-z0-9-]+$/.test(manifest.name)) {
-  console.error(`ERROR: Invalid plugin name '${manifest.name}' in ${manifestPath}. Expected kebab-case matching ^[a-z0-9-]+$.`);
+if (manifest.author !== undefined) {
+  if (!manifest.author || Array.isArray(manifest.author) || typeof manifest.author !== "object") {
+    console.error("ERROR: author must be an object.");
+    process.exit(1);
+  }
+  for (const key of Object.keys(manifest.author)) {
+    if (!["name", "email", "url"].includes(key) || typeof manifest.author[key] !== "string") {
+      console.error(`ERROR: invalid author field '${key}'.`);
+      process.exit(1);
+    }
+  }
+}
+if (manifest.keywords !== undefined && (!Array.isArray(manifest.keywords) || manifest.keywords.some((v) => typeof v !== "string"))) {
+  console.error("ERROR: keywords must be an array of strings.");
   process.exit(1);
 }
-
-console.log(`Manifest validation passed for plugin: ${manifest.name}`);
+if (manifest.extensions !== undefined && (!manifest.extensions || Array.isArray(manifest.extensions) || typeof manifest.extensions !== "object")) {
+  console.error("ERROR: extensions must be an object when present.");
+  process.exit(1);
+}
+console.log(`Agent Plugins manifest validation passed: ${manifest.name}`);
 EOF
-else
-	echo "ERROR: Neither jq nor node is available for JSON validation"
-	exit 1
-fi
