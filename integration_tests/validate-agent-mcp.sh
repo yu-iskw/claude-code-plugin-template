@@ -7,12 +7,12 @@ MCP_PATH="${PLUGIN_DIR}/mcp.json"
 EXPECTED_SCHEMA="https://agent-plugins.org/schemas/1.0.0/mcp.schema.json"
 
 if [[ ! -e ${MCP_PATH} ]]; then
-  echo "No portable mcp.json; skipping MCP validation."
-  exit 0
+	echo "No portable mcp.json; skipping MCP validation."
+	exit 0
 fi
 if [[ ! -f ${MCP_PATH} ]]; then
-  echo "ERROR: ${MCP_PATH} must be a regular file."
-  exit 1
+	echo "ERROR: ${MCP_PATH} must be a regular file."
+	exit 1
 fi
 
 node - "${MCP_PATH}" "${EXPECTED_SCHEMA}" <<'EOF'
