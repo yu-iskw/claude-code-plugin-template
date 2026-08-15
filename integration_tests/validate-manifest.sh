@@ -21,8 +21,8 @@ MANIFEST_PATH="${PLUGIN_DIR}/plugin.json"
 EXPECTED_SCHEMA="https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
 
 if [[ ! -f ${MANIFEST_PATH} ]]; then
-  echo "ERROR: Agent Plugins manifest not found: ${MANIFEST_PATH}"
-  exit 1
+	echo "ERROR: Agent Plugins manifest not found: ${MANIFEST_PATH}"
+	exit 1
 fi
 
 node - "${MANIFEST_PATH}" "${EXPECTED_SCHEMA}" <<'EOF'
