@@ -47,9 +47,11 @@ if (manifest.$schema !== expectedSchema) {
   console.error(`ERROR: $schema must equal ${expectedSchema}.`);
   process.exit(1);
 }
-if (typeof manifest.name !== "string" || manifest.name.trim() === "") {
-  console.error("ERROR: name must be a non-empty string.");
-  process.exit(1);
+for (const field of ["name", "version", "description"]) {
+  if (typeof manifest[field] !== "string" || manifest[field].trim() === "") {
+    console.error(`ERROR: ${field} must be a required non-empty string.`);
+    process.exit(1);
+  }
 }
 if (!/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(manifest.name)) {
   console.error(`ERROR: invalid plugin name: ${manifest.name}`);
@@ -60,7 +62,7 @@ for (const [key, value] of Object.entries(manifest)) {
     console.error(`ERROR: unknown top-level field '${key}' in ${manifestPath}.`);
     process.exit(1);
   }
-  if (["version", "description", "homepage", "repository", "license"].includes(key) && typeof value !== "string") {
+  if (["homepage", "repository", "license"].includes(key) && typeof value !== "string") {
     console.error(`ERROR: ${key} must be a string.`);
     process.exit(1);
   }
