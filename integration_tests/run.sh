@@ -14,14 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Main test runner that orchestrates all test scripts
 set -euo pipefail
 
-# Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "${SCRIPT_DIR}/.." || exit 1
 
-# Parse arguments
 SKIP_LOADING=false
 MANIFEST_ONLY=false
 VERBOSE=false
@@ -46,124 +43,82 @@ while [[ $# -gt 0 ]]; do
 		shift
 		;;
 	--help | -h)
-		echo "Usage: $0 [OPTIONS]"
-		echo ""
-		echo "Options:"
-		echo "  --skip-loading      Skip plugin loading tests"
-		echo "  --manifest-only     Run only manifest validation"
-		echo "  --verbose, -v       Enable verbose output"
-		echo "  --fail-fast         Stop on first failure"
-		echo "  --help, -h          Show this help message"
+		echo "Usage: $0 [--skip-loading] [--manifest-only] [--verbose] [--fail-fast]"
 		exit 0
 		;;
 	*)
 		echo "Unknown option: $1"
-		echo "Run $0 --help for usage information"
 		exit 1
 		;;
 	esac
 done
 
-# Track test results
 FAILED_TESTS=0
 PASSED_TESTS=0
 
 run_test() {
-	test_name="$1"
-	test_script="$2"
-	plugin_path="$3"
-
+	local test_name="$1" test_script="$2" plugin_path="$3"
 	if [[ ${VERBOSE} == true ]]; then
-		echo ""
-		echo "=== Running ${test_name} [${plugin_path}] ==="
+		echo "=== ${test_name} [${plugin_path}] ==="
 	fi
-
 	if "${SCRIPT_DIR}/${test_script}" "${plugin_path}"; then
 		PASSED_TESTS=$((PASSED_TESTS + 1))
-		if [[ ${VERBOSE} == true ]]; then
-			echo "? ${test_name} passed"
-		fi
-		return 0
 	else
 		FAILED_TESTS=$((FAILED_TESTS + 1))
-		echo "? ${test_name} failed"
+		echo "ERROR: ${test_name} failed for ${plugin_path}"
 		if [[ ${FAIL_FAST} == true ]]; then
 			exit 1
 		fi
-		return 1
 	fi
 }
 
-run_test_nonfatal() {
-	set +e
-	run_test "$1" "$2" "$3"
-	set -e
-}
-
-echo "Starting integration tests for all plugins..."
-
-# Discover plugins
 PLUGINS=()
-if [[ -d "plugins" ]]; then
-	for d in plugins/*/; do
-		if [[ -d "${d}.claude-plugin" ]]; then
-			PLUGINS+=("${d%/}")
-		fi
+if [[ -d plugins ]]; then
+	for manifest in plugins/*/plugin.json; do
+		[[ -f ${manifest} ]] || continue
+		PLUGINS+=("$(dirname "${manifest}")")
 	done
 fi
-
-# Fallback to root if no plugins found in plugins/ (for backward compatibility during migration)
-if [[ ${#PLUGINS[@]} -eq 0 ]]; then
-	if [[ -d ".claude-plugin" ]]; then
-		PLUGINS+=(".")
-	fi
+if [[ ${#PLUGINS[@]} -eq 0 && -f plugin.json ]]; then
+	PLUGINS+=(".")
 fi
-
 if [[ ${#PLUGINS[@]} -eq 0 ]]; then
-	echo "No plugins found to test."
+	echo "No Agent Plugins manifests found."
 	exit 0
 fi
 
 for plugin in "${PLUGINS[@]}"; do
-	echo ""
 	echo ">>> Testing plugin: ${plugin}"
+	run_test "Agent Plugins manifest validation" "validate-manifest.sh" "${plugin}"
 
-	# Test 1: Validate manifest
-	run_test_nonfatal "Manifest validation" "validate-manifest.sh" "${plugin}"
+	# Adapter manifests are manifest-level validation and must run even in
+	# --manifest-only mode.
+	if [[ -d "${plugin}/.cursor-plugin" ]]; then
+		run_test "Cursor manifest validation" "validate-cursor-manifest.sh" "${plugin}"
+	fi
+	if [[ -d "${plugin}/.codex-plugin" ]]; then
+		run_test "Codex manifest validation" "validate-codex-manifest.sh" "${plugin}"
+	fi
 
 	if [[ ${MANIFEST_ONLY} == true ]]; then
-		echo "Manifest-only mode: skipping remaining tests for ${plugin}"
-	else
-		# Test 2: Plugin loading (unless skipped)
+		continue
+	fi
+
+	run_test "Agent Plugins MCP validation" "validate-agent-mcp.sh" "${plugin}"
+
+	# Component discovery currently validates Claude-specific components, so a
+	# portable-only Agent Plugin must not be required to provide a Claude adapter.
+	if [[ -f "${plugin}/.claude-plugin/plugin.json" ]]; then
+		run_test "Component discovery" "test-component-discovery.sh" "${plugin}"
 		if [[ ${SKIP_LOADING} == false ]]; then
-			run_test_nonfatal "Plugin loading" "test-plugin-loading.sh" "${plugin}"
-		else
-			echo "Skipping plugin loading tests (--skip-loading)"
+			run_test "Claude plugin loading" "test-plugin-loading.sh" "${plugin}"
 		fi
-
-		# Test 3: Component discovery
-		run_test_nonfatal "Component discovery" "test-component-discovery.sh" "${plugin}"
-	fi
-
-	# Test 4: Cursor manifest validation (optional — only if .cursor-plugin exists)
-	if [[ -d "${plugin}/.cursor-plugin" ]]; then
-		run_test_nonfatal "Cursor manifest validation" "validate-cursor-manifest.sh" "${plugin}"
-	fi
-
-	# Test 5: Codex manifest validation (optional — only if .codex-plugin exists)
-	if [[ -d "${plugin}/.codex-plugin" ]]; then
-		run_test_nonfatal "Codex manifest validation" "validate-codex-manifest.sh" "${plugin}"
 	fi
 done
 
-# Summary
-echo ""
-echo "=== Test Summary ==="
 echo "Passed: ${PASSED_TESTS}"
 if [[ ${FAILED_TESTS} -gt 0 ]]; then
 	echo "Failed: ${FAILED_TESTS}"
 	exit 1
-else
-	echo "All tests passed!"
-	exit 0
 fi
+echo "All tests passed!"
