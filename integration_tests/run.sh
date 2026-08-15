@@ -69,14 +69,22 @@ fi
 for plugin in "${PLUGINS[@]}"; do
   echo ">>> Testing plugin: ${plugin}"
   run_test "Agent Plugins manifest validation" "validate-manifest.sh" "${plugin}"
-  if [[ ${MANIFEST_ONLY} == true ]]; then continue; fi
-  run_test "Agent Plugins MCP validation" "validate-agent-mcp.sh" "${plugin}"
-  run_test "Component discovery" "test-component-discovery.sh" "${plugin}"
-  if [[ -f "${plugin}/.claude-plugin/plugin.json" ]]; then
-    if [[ ${SKIP_LOADING} == false ]]; then run_test "Claude plugin loading" "test-plugin-loading.sh" "${plugin}"; fi
-  fi
+
+  # Adapter manifests are manifest-level validation and must run even in
+  # --manifest-only mode.
   if [[ -d "${plugin}/.cursor-plugin" ]]; then run_test "Cursor manifest validation" "validate-cursor-manifest.sh" "${plugin}"; fi
   if [[ -d "${plugin}/.codex-plugin" ]]; then run_test "Codex manifest validation" "validate-codex-manifest.sh" "${plugin}"; fi
+
+  if [[ ${MANIFEST_ONLY} == true ]]; then continue; fi
+
+  run_test "Agent Plugins MCP validation" "validate-agent-mcp.sh" "${plugin}"
+
+  # Component discovery currently validates Claude-specific components, so a
+  # portable-only Agent Plugin must not be required to provide a Claude adapter.
+  if [[ -f "${plugin}/.claude-plugin/plugin.json" ]]; then
+    run_test "Component discovery" "test-component-discovery.sh" "${plugin}"
+    if [[ ${SKIP_LOADING} == false ]]; then run_test "Claude plugin loading" "test-plugin-loading.sh" "${plugin}"; fi
+  fi
 done
 
 echo "Passed: ${PASSED_TESTS}"
